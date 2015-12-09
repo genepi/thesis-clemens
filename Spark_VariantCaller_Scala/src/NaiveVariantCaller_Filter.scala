@@ -61,12 +61,11 @@ object NaiveVariantCaller_Filter {
     return false
   }
 
-
   def filterLowClarityAndReferenceMatchingBases(record: Pair[NaiveVariantCallerKey,BaseSequenceContent]): Boolean = {
-    filterLowClarity(record._1, record._2) && filterReferenceMatching()
+    filter(record._1, record._2)
   }
 
-  private def filterLowClarity(key: NaiveVariantCallerKey, bsc: BaseSequenceContent): Boolean = {
+  private def filter(key: NaiveVariantCallerKey, bsc: BaseSequenceContent): Boolean = {
     try {
       val mostDominantBase: Char = determineMostDominantBase(bsc.getPercentageOfBaseOccurrences());
       if (!sampleDiffersFromReference(key.getPosition(), mostDominantBase)) {
@@ -78,10 +77,6 @@ object NaiveVariantCaller_Filter {
         return false
       }
     }
-    return true
-  }
-
-  private def filterReferenceMatching() : Boolean = {
     return true
   }
 

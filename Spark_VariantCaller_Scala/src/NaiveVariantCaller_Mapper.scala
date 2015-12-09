@@ -24,7 +24,7 @@ object NaiveVariantCaller_Mapper {
     val resList = new ListBuffer[Pair[NaiveVariantCallerKey,Char]]()
 
     if (NaiveVariantCaller_Filter.readFullfillsRequirements(samRecord)) {
-      for ( i <- 0 until sequence.length-1) {
+      for ( i <- 0 to sequence.length-1) {
         if (NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualities()(i))) {
           val outputKey: NaiveVariantCallerKey = new NaiveVariantCallerKey(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1))
           val base = sequence.charAt(i) match {
