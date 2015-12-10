@@ -27,13 +27,13 @@ object NaiveVariantCaller_Mapper {
       for ( i <- 0 to sequence.length-1) {
         if (NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualities()(i))) {
           val outputKey: NaiveVariantCallerKey = new NaiveVariantCallerKey(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1))
-          val base = sequence.charAt(i) match {
-            case BASE_A => BASE_A
-            case BASE_C => BASE_C
-            case BASE_G => BASE_G
-            case BASE_T => BASE_T
+          sequence.charAt(i) match {
+            case BASE_A => resList.append(new Pair(outputKey, BASE_A))
+            case BASE_C => resList.append(new Pair(outputKey, BASE_C))
+            case BASE_G => resList.append(new Pair(outputKey, BASE_G))
+            case BASE_T => resList.append(new Pair(outputKey, BASE_T))
+            case default => println("base character '" + default + "' occurred at position " + outputKey)
           }
-          resList.append(new Pair(outputKey, base))
         }
       }
     }
