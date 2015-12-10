@@ -20,27 +20,20 @@ object NaiveVariantCaller_Mapper {
     val sequence: String = new String(readBases, StandardCharsets.UTF_8)
     val resList = new ListBuffer[Pair[Int,Char]]()
 
-
-
-    //TODO basequality not available in the record...?!
-
-    //TODO why is there a character 'N' occurring ??
-
     if (NaiveVariantCaller_Filter.readFullfillsRequirements(samRecord)) {
-//      println("samrecordbasequal length: " + samRecord.getBaseQualities().length)
       for ( i <- 0 to sequence.length-1) {
-//        if (NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualities()(i))) {
+        if (!samRecord.getBaseQualityString.equals("*") && NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualityString.charAt(i))) {
           val outputKey: Int = samRecord.getReferencePositionAtReadPosition(i+1)
-          val base = sequence.charAt(i) match {
+          sequence.charAt(i) match {
             case BASE_A => resList.append(new Pair(outputKey, BASE_A))
             case BASE_C => resList.append(new Pair(outputKey, BASE_C))
             case BASE_G => resList.append(new Pair(outputKey, BASE_G))
             case BASE_T => resList.append(new Pair(outputKey, BASE_T))
-            case default => println("base character '" + default + "' occurred")
+            case default => println("base character '" + default + "' occurred at position " + outputKey)
           }
         }
       }
-//    }
+    }
     resList.toTraversable
   }
 
