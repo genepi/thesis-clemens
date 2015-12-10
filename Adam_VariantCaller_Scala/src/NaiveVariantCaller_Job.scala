@@ -2,16 +2,15 @@ import java.io.{File, FileInputStream}
 
 import htsjdk.samtools.{SAMFileHeader, SAMRecord}
 import org.apache.hadoop.conf.Configuration
-import org.apache.spark.annotation.DeveloperApi
+import org.apache.hadoop.fs.Path
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{TaskContext, Partition, SparkConf, SparkContext}
+import org.apache.spark.{SparkConf, SparkContext}
 import org.bdgenomics.adam.converters.AlignmentRecordConverter
 import org.bdgenomics.adam.models.SAMFileHeaderWritable
 import org.bdgenomics.adam.rdd.ADAMContext
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.AlignmentRecord
 import org.seqdoop.hadoop_bam.util.SAMHeaderReader
-
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -20,6 +19,7 @@ import scala.collection.mutable.ListBuffer
   * Created 27.11.15.
   */
 object NaiveVariantCaller_Job {
+  private val parquetFileName = "parquet.adam"
 
   def main(args: Array[String]): Unit = {
 
@@ -36,21 +36,28 @@ object NaiveVariantCaller_Job {
       .set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
       .set("spark.kryo.registrator","org.bdgenomics.adam.serialization.ADAMKryoRegistrator"))
     sc.hadoopConfiguration.set("mapreduce.input.fileinputformat.inputdir", inputPath)
-
     val ac = new ADAMContext(sc)
 
-    //example taken from: adam/adam-core/src/test/scala/org/bdgenomics/adam/projections/FieldEnumerationSuite.scala
-    val samInputFile: File = new File(inputPath);
-    val parquetFileName = inputPath.substring(inputPath.lastIndexOf('/')+1,inputPath.lastIndexOf('.')+1) + "parquet.adam"
-    val parquetFilePath = new File(samInputFile.getParentFile, parquetFileName).getAbsolutePath
+    val inputFile: File = new File(inputPath)
+    var samFileRDD: RDD[AlignmentRecord] = null
+    var parquetFilePath = new String
 
-    //convert BamFile to parquet file and save it on dk
-    val samFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(inputPath)
-    println(samFileRDD.count())
+    //convert BamFiles to ADAM
+//    if (inputFile.isDirectory) {
+//      val inputPaths = getRecursiveListOfFilePaths(inputFile);
+//      parquetFilePath = new File(inputFile, parquetFileName).getAbsolutePath
+//      samFileRDD = ac.loadAlignmentsFromPaths(inputPaths)
+//    } else {
+    val samInputFile: File = new File(inputPath);
+    parquetFilePath = new File(samInputFile.getParentFile, parquetFileName).getAbsolutePath
+    samFileRDD = ac.loadAlignments(inputPath)
+//    }
+
+    //store as parquet files
     samFileRDD.adamParquetSave(parquetFilePath)
 
+    //load parquet files and convert AlignmentRecords to SAMRecords
     val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(parquetFilePath)
-
     val recordConverter = new AlignmentRecordConverter()
     val sfh: SAMFileHeader = SAMHeaderReader.readSAMHeaderFrom(new FileInputStream(samInputFile), new Configuration())
     val sfhWritable = new SAMFileHeaderWritable(sfh)
@@ -68,7 +75,6 @@ object NaiveVariantCaller_Job {
       }
     }
 
-    //TODO sollte kein Problem sein, wenn ich ab hier den spark statt dem Adam-Context verwende
     val samRecordsRDD: RDD[SAMRecord] = sc.parallelize(samRecords)
 
     //mapping step
@@ -92,6 +98,17 @@ object NaiveVariantCaller_Job {
     sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(outputPath)
 
     println("finished process..")
+  }
+
+  def getRecursiveListOfFilePaths(inputFolder: File): Seq[Path] = {
+    val filePaths = new ListBuffer[Path]
+    getRecursiveListOfFiles(inputFolder).foreach( f => filePaths += new Path(f.getAbsolutePath) );
+    filePaths.toList
+  }
+
+  def getRecursiveListOfFiles(parentFolder: File): Array[File] = {
+    val these = parentFolder.listFiles.filter(_.getName.toLowerCase.endsWith(".bam"))
+    these ++ these.filter(_.isDirectory).flatMap(getRecursiveListOfFiles)
   }
 
   private def convertToSAMRecord(record: AlignmentRecord, recordConverter: AlignmentRecordConverter, sfhWritable: SAMFileHeaderWritable): SAMRecord = {
