@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.seqdoop</groupId>
+  <artifactId>hadoop-bam</artifactId>
+  <versioning>
+    <versions>
+      <version>7.1.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20150910064014</lastUpdated>
+  </versioning>
+</metadata>
