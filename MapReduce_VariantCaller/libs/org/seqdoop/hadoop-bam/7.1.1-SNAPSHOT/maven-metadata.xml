@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>org.seqdoop</groupId>
+  <artifactId>hadoop-bam</artifactId>
+  <version>7.1.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20150910.064014</timestamp>
+      <buildNumber>2</buildNumber>
+    </snapshot>
+    <lastUpdated>20150910064014</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar[D</extension>
+        <value>7.1.1-20150910.064014-2</value>
+        <updated>20150910064014</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>7.1.1-20150910.064014-2</value>
+        <updated>20150910064014</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>7.1.1-20150806.104314-1</value>
+        <updated>20150806104314</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
