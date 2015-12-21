@@ -25,7 +25,7 @@
           </transformers>
           <artifactSet>
             <includes>
-              <include>org.seqdoop:*</include>
+              <include>seqdoop:*</include>
             </includes>
           </artifactSet>
         </configuration>
@@ -53,8 +53,8 @@
   <dependencies>
     <dependency>
       <groupId>genepi-hadoop</groupId>
-      <artifactId>genepi-hadoop</artifactId>
-      <version>0.7.9</version>
+      <artifactId>yarn</artifactId>
+      <version>1.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

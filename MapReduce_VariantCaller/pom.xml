@@ -37,15 +37,15 @@
 
         <dependency>
             <groupId>genepi-hadoop</groupId>
-            <artifactId>genepi-hadoop</artifactId>
-            <version>0.7.9</version>
+            <artifactId>yarn</artifactId>
+            <version>1.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.seqdoop</groupId>
-            <artifactId>hadoop-bam</artifactId>
-            <version>7.3.1-SNAPSHOT</version>
-        </dependency>
+     	<dependency>
+			<groupId>seqdoop</groupId>
+			<artifactId>hadoop-bam</artifactId>
+			<version>7.3.1</version>
+		</dependency>
 
     </dependencies>
 
@@ -64,7 +64,7 @@
                     </transformers>
                     <artifactSet>
                         <includes>
-                            <include>org.seqdoop:*</include>
+                            <include>seqdoop:*</include>
                         </includes>
                     </artifactSet>
                 </configuration>
