@@ -2,6 +2,7 @@ package NaiveVariantCaller;
 
 import org.apache.hadoop.io.Text;
 import utils.DominantBasePercentageException;
+import utils.NaiveVariantCallerPosition;
 import utils.NaiveVariantCallerValueWritable;
 import utils.NaiveVariantCallerKeyWritable;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * Organization: DBIS - University of Innsbruck
  * Created 02.10.15.
  */
-public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Reducer<NaiveVariantCallerKeyWritable, Text, NaiveVariantCallerKeyWritable, NaiveVariantCallerValueWritable> {
+public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Reducer<NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition, NaiveVariantCallerKeyWritable, NaiveVariantCallerValueWritable> {
     private static final int MIN_CLARITY_PERCENTAGE = 75;
 
     private static final char BASE_A = 'A';
@@ -261,7 +262,7 @@ public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Redu
             "ATAAAGCCTAAATAGCCCACACGTTCCCCTTAAATAAGACATCACGATG";
 
     @Override
-    protected void reduce(NaiveVariantCallerKeyWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+    protected void reduce(NaiveVariantCallerKeyWritable key, Iterable<NaiveVariantCallerPosition> values, Context context) throws IOException, InterruptedException {
         final Map<Character, Double> percentagesOfBaseOccurrences = getPercentageOfBaseOccurrences(values);
         try {
             char mostDominantBase = determineMostDominantBase(percentagesOfBaseOccurrences);
@@ -273,31 +274,18 @@ public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Redu
         }
     }
 
-    private Map<Character, Double> getPercentageOfBaseOccurrences(Iterable<Text> values) {
+    private Map<Character, Double> getPercentageOfBaseOccurrences(Iterable<NaiveVariantCallerPosition> values) {
         final Map<Character, Double> result = new HashMap<Character, Double>(4);
         int noOfBaseA = 0;
         int noOfBaseC = 0;
         int noOfBaseG = 0;
         int noOfBaseT = 0;
 
-        for (Text element : values) {
-            char base = element.toString().charAt(0);
-            switch (base) {
-                case BASE_A:
-                    noOfBaseA++;
-                    break;
-                case BASE_C:
-                    noOfBaseC++;
-                    break;
-                case BASE_G:
-                    noOfBaseG++;
-                    break;
-                case BASE_T:
-                    noOfBaseT++;
-                    break;
-                default:
-                    break;
-            }
+        for(NaiveVariantCallerPosition val : values) {
+            noOfBaseA += val.getNumberOfBase_A();
+            noOfBaseC += val.getNumberOfBase_C();
+            noOfBaseG += val.getNumberOfBase_G();
+            noOfBaseT += val.getNumberOfBase_T();
         }
 
         final int totalNoOfBases = noOfBaseA + noOfBaseC + noOfBaseG + noOfBaseT;
