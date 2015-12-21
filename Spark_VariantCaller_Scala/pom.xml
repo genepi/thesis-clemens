@@ -14,11 +14,6 @@
 
     <repositories>
         <repository>
-            <id>Cloudera repository</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-        </repository>
-
-        <repository>
             <id>genepi-hadoop</id>
             <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
             <snapshots>
@@ -36,27 +31,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
-            <version>1.5.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>genepi-hadoop</groupId>
-            <artifactId>genepi-hadoop</artifactId>
-            <version>0.7.9</version>
+            <artifactId>yarn</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>org.seqdoop</groupId>
+            <groupId>seqdoop</groupId>
             <artifactId>hadoop-bam</artifactId>
-            <version>7.3.1-SNAPSHOT</version>
+            <version>7.3.1</version>
         </dependency>
     </dependencies>
 
@@ -80,8 +63,7 @@
                     </transformers>
                     <artifactSet>
                         <includes>
-                            <include>org.seqdoop:hadoop-bam:*:*</include>
-                            <include>org.apache.hadoop:*:*:*</include>
+                            <include>seqdoop:*</include>
                         </includes>
                     </artifactSet>
                 </configuration>

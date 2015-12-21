@@ -39,7 +39,7 @@
               <include>com.netflix.servo:*:*:*</include>
               <include>com.google.guava:*:*:*</include>
               <include>it.unimi.dsi:*:*:*</include>
-              <include>org.seqdoop:hadoop-bam:*:*</include>
+              <include>seqdoop:*</include>
             </includes>
           </artifactSet>
         </configuration>
@@ -48,21 +48,23 @@
   </build>
   <repositories>
     <repository>
-      <id>Cloudera repository</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>genepi-hadoop</id>
+      <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
+    </repository>
+    <repository>
+      <id>project.local</id>
+      <name>project</name>
+      <url>file://${basedir}/libs</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>1.5.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.7.1</version>
+      <groupId>genepi-hadoop</groupId>
+      <artifactId>yarn</artifactId>
+      <version>1.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -70,15 +72,12 @@
     <adam.version>0.18.2</adam.version>
     <fastutil.version>7.0.8</fastutil.version>
     <htsjdk.version>1.139</htsjdk.version>
-    <hadoop-bam.version>7.3.0</hadoop-bam.version>
     <java.version>1.8</java.version>
     <utils.version>0.2.3</utils.version>
     <guava.version>16.0.1</guava.version>
     <parquet.version>1.8.1</parquet.version>
     <netflix-server.version>0.12.2</netflix-server.version>
-    <hadoop.version>2.7.1</hadoop.version>
     <bdg-formats.version>0.6.1</bdg-formats.version>
-    <spark.version>1.5.2</spark.version>
   </properties>
 </project>
 

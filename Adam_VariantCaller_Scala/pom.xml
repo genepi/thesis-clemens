@@ -10,13 +10,11 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spark.version>1.5.2</spark.version>
-        <hadoop.version>2.7.1</hadoop.version>
-        <adam.version>0.18.2</adam.version>
         <parquet.version>1.8.1</parquet.version>
+        <adam.version>0.18.2</adam.version>
+        <bdg-formats.version>0.6.1</bdg-formats.version>
         <utils.version>0.2.3</utils.version>
         <htsjdk.version>1.139</htsjdk.version>
-        <bdg-formats.version>0.6.1</bdg-formats.version>
         <guava.version>16.0.1</guava.version>
         <netflix-server.version>0.12.2</netflix-server.version>
         <fastutil.version>7.0.8</fastutil.version>
@@ -24,8 +22,12 @@
 
     <repositories>
         <repository>
-            <id>Cloudera repository</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+            <id>genepi-hadoop</id>
+            <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
 
         <repository>
@@ -36,17 +38,16 @@
     </repositories>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
-            <version>${spark.version}</version>
+            <groupId>genepi-hadoop</groupId>
+            <artifactId>yarn</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop.version}</version>
+            <groupId>seqdoop</groupId>
+            <artifactId>hadoop-bam</artifactId>
+            <version>7.3.1</version>
         </dependency>
 
         <dependency>
@@ -102,13 +103,6 @@
             <artifactId>fastutil</artifactId>
             <version>${fastutil.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.seqdoop</groupId>
-            <artifactId>hadoop-bam</artifactId>
-            <version>7.3.1-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -142,7 +136,7 @@
                             <include>com.netflix.servo:*:*:*</include>
                             <include>com.google.guava:*:*:*</include>
                             <include>it.unimi.dsi:*:*:*</include>
-                            <include>org.seqdoop:hadoop-bam:*:*</include>
+                            <include>seqdoop:*</include>
                         </includes>
                     </artifactSet>
                 </configuration>

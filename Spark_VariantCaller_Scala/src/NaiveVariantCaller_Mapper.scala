@@ -16,6 +16,7 @@ object NaiveVariantCaller_Mapper {
   private val BASE_C: Char = 'C'
   private val BASE_G: Char = 'G'
   private val BASE_T: Char = 'T'
+  private val BASE_N: Char = 'N'
 
   def flatMap(sampleIdentifier:String, record:SAMRecordWritable): TraversableOnce[Pair[NaiveVariantCallerKey,Char]] = {
     val samRecord: SAMRecord = record.get()
@@ -32,6 +33,7 @@ object NaiveVariantCaller_Mapper {
             case BASE_C => resList.append(new Pair(outputKey, BASE_C))
             case BASE_G => resList.append(new Pair(outputKey, BASE_G))
             case BASE_T => resList.append(new Pair(outputKey, BASE_T))
+            case BASE_N => resList.append(new Pair(outputKey, BASE_N))
             case default => println("base character '" + default + "' occurred at position " + outputKey)
           }
         }

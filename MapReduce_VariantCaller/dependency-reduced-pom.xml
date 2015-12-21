@@ -34,10 +34,6 @@
   </build>
   <repositories>
     <repository>
-      <id>cloudera</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-    </repository>
-    <repository>
       <snapshots>
         <updatePolicy>always</updatePolicy>
       </snapshots>

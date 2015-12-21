@@ -9,12 +9,6 @@
     <version>1.0-SNAPSHOT</version>
 
     <repositories>
-
-        <repository>
-            <id>cloudera</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-        </repository>
-
         <repository>
             <id>genepi-hadoop</id>
             <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
@@ -29,12 +23,10 @@
             <name>project</name>
             <url>file://${basedir}/libs</url>
         </repository>
-
     </repositories>
 
 
     <dependencies>
-
         <dependency>
             <groupId>genepi-hadoop</groupId>
             <artifactId>yarn</artifactId>
@@ -46,7 +38,6 @@
 			<artifactId>hadoop-bam</artifactId>
 			<version>7.3.1</version>
 		</dependency>
-
     </dependencies>
 
     <build>

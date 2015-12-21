@@ -29,8 +29,7 @@
           </transformers>
           <artifactSet>
             <includes>
-              <include>org.seqdoop:hadoop-bam:*:*</include>
-              <include>org.apache.hadoop:*:*:*</include>
+              <include>seqdoop:*</include>
             </includes>
           </artifactSet>
         </configuration>
@@ -38,10 +37,6 @@
     </plugins>
   </build>
   <repositories>
-    <repository>
-      <id>Cloudera repository</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-    </repository>
     <repository>
       <snapshots>
         <updatePolicy>always</updatePolicy>
@@ -57,15 +52,9 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>1.5.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>genepi-hadoop</groupId>
-      <artifactId>genepi-hadoop</artifactId>
-      <version>0.7.9</version>
+      <artifactId>yarn</artifactId>
+      <version>1.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

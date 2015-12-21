@@ -21,20 +21,7 @@ object NaiveVariantCaller_Reducer {
     bsc1.incrementNoOfBaseCBy(bsc2.getNoOfBaseC)
     bsc1.incrementNoOfBaseGBy(bsc2.getNoOfBaseG)
     bsc1.incrementNoOfBaseTBy(bsc2.getNoOfBaseT)
+    bsc1.incrementNoOfBaseNBy(bsc2.getNoOfBaseN)
   }
-
-  //  def createBaseSeqContent(base: Char): LongWritable = {
-  //    new io.LongWritable(1)
-  //  }
-  //
-  //  def countAndCalculateBasePercentage(baseSeqContent: LongWritable, base: Char): LongWritable = {
-  //    baseSeqContent.set(baseSeqContent.get()+1)
-  //    baseSeqContent
-  //  }
-  //
-  //  def combine(bsc1: LongWritable, bsc2: LongWritable): LongWritable = {
-  //    bsc1
-  //  }
-
 
 }
