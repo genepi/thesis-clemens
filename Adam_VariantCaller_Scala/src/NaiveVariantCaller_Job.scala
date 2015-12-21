@@ -96,8 +96,6 @@ object NaiveVariantCaller_Job {
 
     //format and save output to file
     sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(outputPath)
-
-    println("finished process..")
   }
 
   def getRecursiveListOfFilePaths(inputFolder: File): Seq[Path] = {
