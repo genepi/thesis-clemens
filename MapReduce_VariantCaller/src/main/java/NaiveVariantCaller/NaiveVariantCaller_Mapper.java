@@ -53,6 +53,7 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
                             context.write(outputKey, new Text(String.valueOf(BASE_T)));
                             break;
                         default:
+                            System.out.println("other base character occurred at position " + outputKey);
                             break;
                     }
                 }
