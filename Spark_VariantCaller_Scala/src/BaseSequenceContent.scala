@@ -11,13 +11,11 @@ class BaseSequenceContent(base: Char) extends Serializable {
   private val BASE_C: Char = 'C'
   private val BASE_G: Char = 'G'
   private val BASE_T: Char = 'T'
-  private val BASE_N: Char = 'N'
 
   private var noOfBaseA: Int = 0
   private var noOfBaseC: Int = 0
   private var noOfBaseG: Int = 0
   private var noOfBaseT: Int = 0
-  private var noOfBaseN: Int = 0
 
   private var mostDominantBase: Char = ' '
 
@@ -27,7 +25,6 @@ class BaseSequenceContent(base: Char) extends Serializable {
       case BASE_C => noOfBaseC += 1
       case BASE_G => noOfBaseG += 1
       case BASE_T => noOfBaseT += 1
-      case BASE_N => noOfBaseN += 1
     }
     this
   }
@@ -52,11 +49,6 @@ class BaseSequenceContent(base: Char) extends Serializable {
     this
   }
 
-  def incrementNoOfBaseNBy(value: Int): BaseSequenceContent = {
-    noOfBaseN += value
-    this
-  }
-
   def getNoOfBaseA: Int = {
     return noOfBaseA
   }
@@ -73,10 +65,6 @@ class BaseSequenceContent(base: Char) extends Serializable {
     return noOfBaseT
   }
 
-  def getNoOfBaseN: Int = {
-    return noOfBaseN
-  }
-
   def setMostDominantBase(mostDominantBase: Char) {
     this.mostDominantBase = mostDominantBase
   }
@@ -87,18 +75,16 @@ class BaseSequenceContent(base: Char) extends Serializable {
 
   def getPercentageOfBaseOccurrences(): Map[Character, Double] = {
     val result: Map[Character,Double] = Map[Character,Double]()
-    val totalNoOfBases: Int = noOfBaseA + noOfBaseC + noOfBaseG + noOfBaseT + noOfBaseN
+    val totalNoOfBases: Int = noOfBaseA + noOfBaseC + noOfBaseG + noOfBaseT
     val percentageValueBaseA: Double = calculatePercentageValue(noOfBaseA, totalNoOfBases)
     val percentageValueBaseC: Double = calculatePercentageValue(noOfBaseC, totalNoOfBases)
     val percentageValueBaseG: Double = calculatePercentageValue(noOfBaseG, totalNoOfBases)
     val percentageValueBaseT: Double = calculatePercentageValue(noOfBaseT, totalNoOfBases)
-    val percentageValueBaseN: Double = calculatePercentageValue(noOfBaseN, totalNoOfBases)
 
     result(BASE_A) = percentageValueBaseA
     result(BASE_C) = percentageValueBaseC
     result(BASE_G) = percentageValueBaseG
     result(BASE_T) = percentageValueBaseT
-    result(BASE_N) = percentageValueBaseN
 
     result
   }

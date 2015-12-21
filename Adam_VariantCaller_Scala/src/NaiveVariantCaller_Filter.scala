@@ -12,7 +12,6 @@ object NaiveVariantCaller_Filter {
   private val BASE_C: Char = 'C'
   private val BASE_G: Char = 'G'
   private val BASE_T: Char = 'T'
-  private val BASE_N: Char = 'N'
 
   private val MIN_BASE_QUAL: Int = 30
   private val MIN_MAP_QUAL: Int = 30
@@ -93,9 +92,6 @@ object NaiveVariantCaller_Filter {
     }
     else if (percentagesOfBaseOccurrences(BASE_T) >= MIN_CLARITY_PERCENTAGE) {
       return BASE_T
-    }
-    else if (percentagesOfBaseOccurrences(BASE_N) >= MIN_CLARITY_PERCENTAGE) {
-      return BASE_N
     }
     else {
       throw new DominantBasePercentageException(

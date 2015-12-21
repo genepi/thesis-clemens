@@ -1,9 +1,8 @@
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.LongWritable
-import org.apache.hadoop.mapreduce.lib.input.{FileSplit, TextInputFormat}
 import org.apache.spark.rdd.{NewHadoopRDD, RDD}
 import org.apache.spark.{SparkConf, SparkContext}
-import org.seqdoop.hadoop_bam.{FileVirtualSplit, BAMInputFormat, SAMRecordWritable}
+import org.seqdoop.hadoop_bam.{BAMInputFormat, FileVirtualSplit, SAMRecordWritable}
 
 /**
   * master-thesis Clemens Banas
