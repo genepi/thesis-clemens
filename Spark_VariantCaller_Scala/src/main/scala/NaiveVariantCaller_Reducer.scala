@@ -1,5 +1,4 @@
-import org.apache.hadoop.io
-import org.apache.hadoop.io.LongWritable
+package main.scala
 
 /**
   * master-thesis Clemens Banas

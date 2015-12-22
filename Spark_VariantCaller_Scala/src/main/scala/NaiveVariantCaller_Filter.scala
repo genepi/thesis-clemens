@@ -1,5 +1,7 @@
+package main.scala
+
 import htsjdk.samtools.SAMRecord
-import org.apache.hadoop.io.LongWritable
+
 import scala.collection.mutable.Map
 
 /**

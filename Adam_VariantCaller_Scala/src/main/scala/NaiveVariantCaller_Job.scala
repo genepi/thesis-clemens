@@ -1,18 +1,19 @@
+package main.scala
+
 import java.io.{File, FileInputStream}
 
-import htsjdk.samtools.{SAMFileHeader, SAMRecord}
+import htsjdk.samtools.SAMFileHeader
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.LongWritable
-import org.apache.spark.rdd.{NewHadoopRDD, RDD}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.bdgenomics.adam.converters.AlignmentRecordConverter
 import org.bdgenomics.adam.models.SAMFileHeaderWritable
 import org.bdgenomics.adam.rdd.ADAMContext
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.AlignmentRecord
-import org.seqdoop.hadoop_bam.FileVirtualSplit
 import org.seqdoop.hadoop_bam.util.SAMHeaderReader
+
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -25,13 +26,16 @@ object NaiveVariantCaller_Job {
 
   def main(args: Array[String]): Unit = {
 
-    if (args.length != 2) {
+    println("halloooooooooo");
+
+    if (args.length != 3) {
       println("usage: /Users/Clemens/thesis/binaries/spark-1.5.2-bin-hadoop2.6/bin/spark-submit --master local[2] /Users/Clemens/thesis/Adam_VariantCaller_Scala/target/Adam_VariantCaller_Scala-1.0-SNAPSHOT.jar <bam input file> <output dir>")
       return;
     }
 
     val inputPath = args(0)
-    val outputPath = args(1)
+    val samInputFilePath = args(1)
+    val outputPath = args(2)
 
     val sc = new SparkContext(new SparkConf()
       .setAppName("Adam_VariantCaller_Scala")
@@ -43,17 +47,17 @@ object NaiveVariantCaller_Job {
     val inputFile: File = new File(inputPath)
     var samFileRDD: RDD[AlignmentRecord] = null
     var parquetFilePath = new String
+    val samInputFile: File = new File(samInputFilePath);
 
     //convert BamFiles to ADAM
-//    if (inputFile.isDirectory) {
-//      val inputPaths = getRecursiveListOfFilePaths(inputFile);
-//      parquetFilePath = new File(inputFile, parquetFileName).getAbsolutePath
-//      samFileRDD = ac.loadAlignmentsFromPaths(inputPaths)
-//    } else {
-    val samInputFile: File = new File(inputPath);
-    parquetFilePath = new File(samInputFile.getParentFile, parquetFileName).getAbsolutePath
-    samFileRDD = ac.loadAlignments(inputPath)
-//    }
+    if (inputFile.isDirectory) {
+      val inputPaths = getRecursiveListOfFilePaths(inputFile);
+      parquetFilePath = new File(inputFile, parquetFileName).getAbsolutePath
+      samFileRDD = ac.loadAlignmentsFromPaths(inputPaths)
+    } else {
+      parquetFilePath = new File(samInputFile.getParentFile, parquetFileName).getAbsolutePath
+      samFileRDD = ac.loadAlignments(inputPath)
+    }
 
     //store as parquet files
     samFileRDD.adamParquetSave(parquetFilePath)
@@ -88,6 +92,17 @@ object NaiveVariantCaller_Job {
 
     //format and save output to file
     sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(outputPath)
+  }
+
+  def getRecursiveListOfFilePaths(inputFolder: File): Seq[Path] = {
+    val filePaths = new ListBuffer[Path]
+    getRecursiveListOfFiles(inputFolder).foreach( f => filePaths += new Path(f.getAbsolutePath) );
+    filePaths.toList
+  }
+
+  def getRecursiveListOfFiles(parentFolder: File): Array[File] = {
+    val these = parentFolder.listFiles.filter(_.getName.toLowerCase.endsWith(".bam"))
+    these ++ these.filter(_.isDirectory).flatMap(getRecursiveListOfFiles)
   }
 
 }

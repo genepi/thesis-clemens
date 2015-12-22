@@ -1,9 +1,11 @@
+package main.scala
+
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 22.12.15.
   */
-@SerialVersionUID(2199682541339228406L)
+@SerialVersionUID(2139682581339928416L)
 trait NaiveVariantCallerSerializableTrait extends Serializable {
 
 }

@@ -1,3 +1,5 @@
+package main.scala
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.LongWritable
 import org.apache.spark.rdd.{NewHadoopRDD, RDD}
@@ -12,6 +14,8 @@ import org.seqdoop.hadoop_bam.{BAMInputFormat, FileVirtualSplit, SAMRecordWritab
 object NaiveVariantCaller_Job {
 
   def main(args: Array[String]): Unit = {
+
+    println("abcdefg..hi")
 
     if (args.length != 2) {
       println("usage: /Users/Clemens/thesis/binaries/spark-1.4.1-bin-hadoop2.6/bin/spark-submit --master local[2] /Users/Clemens/thesis/Spark_VariantCaller_Scala/target/Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar <bam input file> <output dir>")

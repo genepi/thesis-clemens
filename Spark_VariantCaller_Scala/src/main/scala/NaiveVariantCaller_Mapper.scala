@@ -1,20 +1,16 @@
-import java.io.{File, FileInputStream}
+package main.scala
+
 import java.nio.charset.StandardCharsets
 
-import htsjdk.samtools.{SAMFileHeader, SAMRecord}
-import org.apache.hadoop.conf.Configuration
-import org.bdgenomics.adam.converters.AlignmentRecordConverter
-import org.bdgenomics.adam.models.SAMFileHeaderWritable
-import org.bdgenomics.formats.avro.AlignmentRecord
+import htsjdk.samtools.SAMRecord
 import org.seqdoop.hadoop_bam.SAMRecordWritable
-import org.seqdoop.hadoop_bam.util.SAMHeaderReader
 
 import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 04.12.15.
+  * Created 26.11.15.
   */
 object NaiveVariantCaller_Mapper {
   private val BASE_A: Char = 'A'
@@ -22,17 +18,15 @@ object NaiveVariantCaller_Mapper {
   private val BASE_G: Char = 'G'
   private val BASE_T: Char = 'T'
 
-
-  //new attempt
-  def flatMap(sampleIdentifier:Int, record:AlignmentRecord, recordConverter: AlignmentRecordConverter, sfhWritable: SAMFileHeaderWritable): TraversableOnce[Pair[NaiveVariantCallerKey,Char]] = {
-    val samRecord: SAMRecord = convertToSAMRecord(record, recordConverter, sfhWritable)
+  def flatMap(sampleIdentifier:String, record:SAMRecordWritable): TraversableOnce[Pair[NaiveVariantCallerKey,Char]] = {
+    val samRecord: SAMRecord = record.get()
     val readBases: Array[Byte] = samRecord.getReadBases()
     val sequence: String = new String(readBases, StandardCharsets.UTF_8)
     val resList = new ListBuffer[Pair[NaiveVariantCallerKey,Char]]()
 
     if (NaiveVariantCaller_Filter.readFullfillsRequirements(samRecord)) {
       for ( i <- 0 to sequence.length-1) {
-        if (!samRecord.getBaseQualityString.equals("*") && NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualityString.charAt(i))) {
+        if (NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualities()(i))) {
           val outputKey: NaiveVariantCallerKey = new NaiveVariantCallerKey(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1))
           sequence.charAt(i) match {
             case BASE_A => resList.append(new Pair(outputKey, BASE_A))
@@ -45,10 +39,6 @@ object NaiveVariantCaller_Mapper {
       }
     }
     resList.toTraversable
-  }
-
-  private def convertToSAMRecord(record: AlignmentRecord, recordConverter: AlignmentRecordConverter, sfhWritable: SAMFileHeaderWritable): SAMRecord = {
-    recordConverter.convert(record, sfhWritable)
   }
 
 }

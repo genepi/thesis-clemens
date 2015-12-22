@@ -1,3 +1,5 @@
+package main.scala
+
 import htsjdk.samtools.SAMRecord
 
 import scala.collection.mutable.Map
