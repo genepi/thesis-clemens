@@ -3,13 +3,15 @@ import java.io.{File, FileInputStream}
 import htsjdk.samtools.{SAMFileHeader, SAMRecord}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.spark.rdd.RDD
+import org.apache.hadoop.io.LongWritable
+import org.apache.spark.rdd.{NewHadoopRDD, RDD}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.bdgenomics.adam.converters.AlignmentRecordConverter
 import org.bdgenomics.adam.models.SAMFileHeaderWritable
 import org.bdgenomics.adam.rdd.ADAMContext
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.AlignmentRecord
+import org.seqdoop.hadoop_bam.FileVirtualSplit
 import org.seqdoop.hadoop_bam.util.SAMHeaderReader
 import scala.collection.mutable.ListBuffer
 
@@ -56,61 +58,36 @@ object NaiveVariantCaller_Job {
     //store as parquet files
     samFileRDD.adamParquetSave(parquetFilePath)
 
-    //load parquet files and convert AlignmentRecords to SAMRecords
+    //map with index
     val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(parquetFilePath)
+    val myRDD: RDD[Pair[Int,AlignmentRecord]] = parquetFileRDD.mapPartitionsWithIndex{ (index, iterator) =>
+      iterator.map{ record => (index,record)}
+    }
+
+    //needed to convert AlignmentRecords to SAMRecords
     val recordConverter = new AlignmentRecordConverter()
     val sfh: SAMFileHeader = SAMHeaderReader.readSAMHeaderFrom(new FileInputStream(samInputFile), new Configuration())
     val sfhWritable = new SAMFileHeaderWritable(sfh)
 
-    // TODO Achtung auf die Performance!!! => ist vielleicht nicht die schnellste Variante...
-    val temp: Array[AlignmentRecord] = parquetFileRDD.collect()
-    val samRecords: ListBuffer[SAMRecord] = new ListBuffer[SAMRecord]
-
-    for (i <- 0 to temp.length-1) {
-      if (NaiveVariantCaller_Filter.mappingQualitySufficient(temp(i).getMapq())) { //filter low mapping qual records
-        val sr: SAMRecord = convertToSAMRecord(temp(i), recordConverter, sfhWritable)
-        if (sr != null) {
-          samRecords += sr
-        }
-      }
-    }
-
-    val samRecordsRDD: RDD[SAMRecord] = sc.parallelize(samRecords)
-
     //mapping step
-    val baseCount: RDD[Pair[Int,Char]] = samRecordsRDD.flatMap( record => NaiveVariantCaller_Mapper.flatMap(record) )
+    val baseCount: RDD[Pair[NaiveVariantCallerKey,Char]] = myRDD.flatMap( a => NaiveVariantCaller_Mapper.flatMap(a._1, a._2, recordConverter, sfhWritable))
 
     //reduce step
-    val baseSequenceContent: RDD[Pair[Int,BaseSequenceContent]] = baseCount.combineByKey(
+    val baseSequenceContent: RDD[Pair[NaiveVariantCallerKey,BaseSequenceContent]] = baseCount.combineByKey(
       (base: Char) => (NaiveVariantCaller_Reducer.createBaseSeqContent(base)),
       (bsc: BaseSequenceContent, base: Char) => (NaiveVariantCaller_Reducer.countAndCalculateBasePercentage(bsc,base)),
       (bsc1: BaseSequenceContent, bsc2: BaseSequenceContent) => (NaiveVariantCaller_Reducer.combine(bsc1,bsc2)))
 
     //filter step
-    val res: RDD[Pair[Int,BaseSequenceContent]] = baseSequenceContent.filter(
+    val res: RDD[Pair[NaiveVariantCallerKey,BaseSequenceContent]] = baseSequenceContent.filter(
       record => NaiveVariantCaller_Filter.filterLowClarityAndReferenceMatchingBases(record)
     )
 
     //sort result
-    val sortedRes = res.sortBy( record => (record._1) )
+    val sortedRes = res.sortBy( record => (record._1.getSampleIdentifier(), record._1.getPosition()) )
 
     //format and save output to file
     sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(outputPath)
-  }
-
-  def getRecursiveListOfFilePaths(inputFolder: File): Seq[Path] = {
-    val filePaths = new ListBuffer[Path]
-    getRecursiveListOfFiles(inputFolder).foreach( f => filePaths += new Path(f.getAbsolutePath) );
-    filePaths.toList
-  }
-
-  def getRecursiveListOfFiles(parentFolder: File): Array[File] = {
-    val these = parentFolder.listFiles.filter(_.getName.toLowerCase.endsWith(".bam"))
-    these ++ these.filter(_.isDirectory).flatMap(getRecursiveListOfFiles)
-  }
-
-  private def convertToSAMRecord(record: AlignmentRecord, recordConverter: AlignmentRecordConverter, sfhWritable: SAMFileHeaderWritable): SAMRecord = {
-    recordConverter.convert(record, sfhWritable)
   }
 
 }
