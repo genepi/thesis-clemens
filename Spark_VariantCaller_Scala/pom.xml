@@ -9,11 +9,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <genepi-yarn.version>1.0</genepi-yarn.version>
+        <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
         <scala.version>2.10.4</scala.version>
         <hadoop-bam.version>7.3.1</hadoop-bam.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
+        <maven-scala-plugin.version>2.15.0</maven-scala-plugin.version>
         <maven-shade-plugin.version>2.4.1</maven-shade-plugin.version>
     </properties>
 
@@ -44,8 +44,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>genepi-hadoop</groupId>
-            <artifactId>yarn</artifactId>
+            <groupId>genepi</groupId>
+            <artifactId>genepi-hadoop</artifactId>
             <version>${genepi-yarn.version}</version>
         </dependency>
 
