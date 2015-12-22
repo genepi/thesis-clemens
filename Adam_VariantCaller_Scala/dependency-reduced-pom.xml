@@ -28,7 +28,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>NaiveVariantCaller_Job</mainClass>
+              <mainClass>main.scala.NaiveVariantCaller_Job</mainClass>
             </transformer>
           </transformers>
           <artifactSet>
@@ -62,9 +62,9 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>genepi-hadoop</groupId>
-      <artifactId>yarn</artifactId>
-      <version>1.0</version>
+      <groupId>genepi</groupId>
+      <artifactId>genepi-hadoop</artifactId>
+      <version>yarn-1.0.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -76,6 +76,7 @@
     <utils.version>0.2.3</utils.version>
     <guava.version>16.0.1</guava.version>
     <parquet.version>1.8.1</parquet.version>
+    <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
     <netflix-server.version>0.12.2</netflix-server.version>
     <bdg-formats.version>0.6.1</bdg-formats.version>
   </properties>
