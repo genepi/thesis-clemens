@@ -8,6 +8,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.BAMInputFormat;
 import utils.NaiveVariantCallerOutputFormat;
+import utils.NaiveVariantCallerPosition;
 import utils.NaiveVariantCallerValueWritable;
 import utils.NaiveVariantCallerKeyWritable;
 
@@ -28,7 +29,7 @@ public class NaiveVariantCaller_Job {
 
         job.setInputFormatClass(BAMInputFormat.class);
         job.setMapOutputKeyClass(NaiveVariantCallerKeyWritable.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(NaiveVariantCallerPosition.class);
 
         job.setOutputKeyClass(NaiveVariantCallerKeyWritable.class);
         job.setOutputValueClass(NaiveVariantCallerValueWritable.class);

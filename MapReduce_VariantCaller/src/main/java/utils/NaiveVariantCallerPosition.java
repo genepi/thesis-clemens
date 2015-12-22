@@ -84,7 +84,6 @@ public class NaiveVariantCallerPosition implements Writable {
         out.writeInt(base_C);
         out.writeInt(base_G);
         out.writeInt(base_T);
-
     }
 
     public void readFields(DataInput in) throws IOException {
@@ -93,4 +92,5 @@ public class NaiveVariantCallerPosition implements Writable {
         base_G = in.readInt();
         base_T = in.readInt();
     }
+
 }
