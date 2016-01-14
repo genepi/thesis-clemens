@@ -21,7 +21,7 @@ public class NaiveVariantCaller_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "Naive Variant Caller");
+        Job job = Job.getInstance(conf, "MR_VariantCaller_Java");
 
         job.setJarByClass(NaiveVariantCaller_Job.class);
         job.setMapperClass(NaiveVariantCaller_Mapper.class);

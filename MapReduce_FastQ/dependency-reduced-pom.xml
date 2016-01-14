@@ -20,7 +20,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>PerBaseQual.FastQ_PerBaseQual_Job</mainClass>
+              <mainClass>PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>
             </transformer>
           </transformers>
           <artifactSet>
