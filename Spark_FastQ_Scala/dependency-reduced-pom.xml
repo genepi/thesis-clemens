@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>at.ac.uibk.mapreduce-fastq.thesis.banas</groupId>
-  <artifactId>MapReduce_FastQ</artifactId>
+  <groupId>at.ac.uibk.spark-fastq.thesis.banas</groupId>
+  <artifactId>Spark_FastQ</artifactId>
   <version>1.0-SNAPSHOT</version>
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>${maven-shade-plugin.version}</version>
@@ -20,7 +28,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>PerSequenceQual.FastQ_PerSequenceQual_Job</mainClass>
+              <mainClass>main.scala.PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>
             </transformer>
           </transformers>
           <artifactSet>
@@ -57,7 +65,9 @@
   <properties>
     <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
     <hadoop-bam.version>7.3.1</hadoop-bam.version>
-    <maven-shade-plugin.version>2.4.1</maven-shade-plugin.version>
+    <java.version>1.8</java.version>
+    <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+    <maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
   </properties>
 </project>
 
