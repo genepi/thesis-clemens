@@ -8,7 +8,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
@@ -16,7 +16,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.4.2</version>
+        <version>${maven-shade-plugin.version}</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -39,6 +39,7 @@
               <include>com.netflix.servo:*:*:*</include>
               <include>com.google.guava:*:*:*</include>
               <include>it.unimi.dsi:*:*:*</include>
+              <include>genepi:*</include>
               <include>seqdoop:*</include>
             </includes>
           </artifactSet>
@@ -60,20 +61,15 @@
       <url>file://${basedir}/libs</url>
     </repository>
   </repositories>
-  <dependencies>
-    <dependency>
-      <groupId>genepi</groupId>
-      <artifactId>genepi-hadoop</artifactId>
-      <version>yarn-1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
   <properties>
     <adam.version>0.18.2</adam.version>
     <fastutil.version>7.0.8</fastutil.version>
     <htsjdk.version>1.139</htsjdk.version>
     <java.version>1.8</java.version>
+    <hadoop-bam.version>7.3.1</hadoop-bam.version>
     <utils.version>0.2.3</utils.version>
+    <maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
+    <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     <guava.version>16.0.1</guava.version>
     <parquet.version>1.8.1</parquet.version>
     <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
