@@ -56,8 +56,8 @@
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <!--SET THIS depending on the Job you want to execute-->
-                            <!--<mainClass>PerBaseQual.FastQ_PerBaseQual_Job</mainClass>-->
-                            <mainClass>PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>
+                            <mainClass>PerBaseQual.FastQ_PerBaseQual_Job</mainClass>
+                            <!--<mainClass>PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>-->
                             <!--<mainClass>PerSequenceQual.FastQ_PerSequenceQual_Job</mainClass>-->
                         </transformer>
                     </transformers>

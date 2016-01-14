@@ -7,10 +7,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.BAMInputFormat;
-import utils.NaiveVariantCallerOutputFormat;
-import utils.NaiveVariantCallerPosition;
-import utils.NaiveVariantCallerValueWritable;
 import utils.NaiveVariantCallerKeyWritable;
+import utils.NaiveVariantCallerOutputFormat;
+import utils.NaiveVariantCallerValueWritable;
 
 /**
  * master-thesis Clemens Banas
@@ -21,7 +20,7 @@ public class NaiveVariantCaller_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "MR_VariantCaller_Java");
+        Job job = Job.getInstance(conf, "MR_VariantCaller");
 
         job.setJarByClass(NaiveVariantCaller_Job.class);
         job.setMapperClass(NaiveVariantCaller_Mapper.class);
@@ -29,7 +28,7 @@ public class NaiveVariantCaller_Job {
 
         job.setInputFormatClass(BAMInputFormat.class);
         job.setMapOutputKeyClass(NaiveVariantCallerKeyWritable.class);
-        job.setMapOutputValueClass(NaiveVariantCallerPosition.class);
+        job.setMapOutputValueClass(Text.class);
 
         job.setOutputKeyClass(NaiveVariantCallerKeyWritable.class);
         job.setOutputValueClass(NaiveVariantCallerValueWritable.class);

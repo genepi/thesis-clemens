@@ -6,20 +6,16 @@ import org.apache.hadoop.io.Text;
 import org.seqdoop.hadoop_bam.FileVirtualSplit;
 import org.seqdoop.hadoop_bam.SAMRecordWritable;
 import utils.NaiveVariantCallerKeyWritable;
-import utils.NaiveVariantCallerPosition;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
  * Created 02.10.15.
  */
-public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWritable, SAMRecordWritable, NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition> {
+public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWritable, SAMRecordWritable, NaiveVariantCallerKeyWritable, Text> {
     private static final int MIN_BASE_QUAL = 30;
     private static final int MIN_MAP_QUAL = 30;
     private static final int MIN_ALIGN_QUAL = 30;
@@ -39,41 +35,28 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
         final byte[] readBases = samRecord.getReadBases();
         String sequence = new String(readBases, StandardCharsets.UTF_8);
 
-        Map<NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition> keyMapping = new HashMap<NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition>();
-
         if (readFullfillsRequirements(samRecord)) {
             for (int i = 0; i < sequence.length(); i++) {
                 if (baseQualitySufficient((samRecord.getBaseQualities()[i]))) {
                 NaiveVariantCallerKeyWritable outputKey = new NaiveVariantCallerKeyWritable(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1));
-
-                    if(!keyMapping.containsKey(outputKey)) {
-                        keyMapping.put(outputKey, new NaiveVariantCallerPosition());
-                    }
-                    final NaiveVariantCallerPosition posCounter = keyMapping.get(outputKey);
                     switch (sequence.charAt(i)) {
                         case BASE_A:
-                            posCounter.incrementBase_A();
+                            context.write(outputKey, new Text(String.valueOf(BASE_A)));
                             break;
                         case BASE_C:
-                            posCounter.incrementBase_C();
+                            context.write(outputKey, new Text(String.valueOf(BASE_C)));
                             break;
                         case BASE_G:
-                            posCounter.incrementBase_G();
+                            context.write(outputKey, new Text(String.valueOf(BASE_G)));
                             break;
                         case BASE_T:
-                            posCounter.incrementBase_T();
+                            context.write(outputKey, new Text(String.valueOf(BASE_T)));
                             break;
                         default:
                             System.out.println("other base character occurred at position " + outputKey);
                             break;
                     }
                 }
-            }
-
-            Iterator it = keyMapping.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                context.write((NaiveVariantCallerKeyWritable)pair.getKey(), (NaiveVariantCallerPosition)pair.getValue());
             }
         }
     }
