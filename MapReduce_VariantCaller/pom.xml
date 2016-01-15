@@ -39,11 +39,11 @@
             <version>${genepi-yarn.version}</version>
         </dependency>
 
-     	<dependency>
-			<groupId>seqdoop</groupId>
-			<artifactId>hadoop-bam</artifactId>
-			<version>${hadoop-bam.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>seqdoop</groupId>
+            <artifactId>hadoop-bam</artifactId>
+            <version>${hadoop-bam.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

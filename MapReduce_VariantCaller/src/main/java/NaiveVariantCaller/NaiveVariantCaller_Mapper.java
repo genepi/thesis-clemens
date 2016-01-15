@@ -2,20 +2,23 @@ package NaiveVariantCaller;
 
 import htsjdk.samtools.SAMRecord;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
 import org.seqdoop.hadoop_bam.FileVirtualSplit;
 import org.seqdoop.hadoop_bam.SAMRecordWritable;
 import utils.NaiveVariantCallerKeyWritable;
+import utils.NaiveVariantCallerPosition;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
  * Created 02.10.15.
  */
-public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWritable, SAMRecordWritable, NaiveVariantCallerKeyWritable, Text> {
+public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWritable, SAMRecordWritable, NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition> {
     private static final int MIN_BASE_QUAL = 30;
     private static final int MIN_MAP_QUAL = 30;
     private static final int MIN_ALIGN_QUAL = 30;
@@ -26,6 +29,8 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
     private static final char BASE_C = 'C';
     private static final char BASE_G = 'G';
     private static final char BASE_T = 'T';
+
+    private Map<NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition> keyMapping = new HashMap<NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition>();
 
     @Override
     protected void map(LongWritable key, SAMRecordWritable value, Context context) throws IOException, InterruptedException {
@@ -39,18 +44,24 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
             for (int i = 0; i < sequence.length(); i++) {
                 if (baseQualitySufficient((samRecord.getBaseQualities()[i]))) {
                 NaiveVariantCallerKeyWritable outputKey = new NaiveVariantCallerKeyWritable(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1));
+
+                    if(!this.keyMapping.containsKey(outputKey)) {
+                        this.keyMapping.put(outputKey, new NaiveVariantCallerPosition());
+                    }
+                    final NaiveVariantCallerPosition posCounter = this.keyMapping.get(outputKey);
+
                     switch (sequence.charAt(i)) {
                         case BASE_A:
-                            context.write(outputKey, new Text(String.valueOf(BASE_A)));
+                            posCounter.incrementBase_A();
                             break;
                         case BASE_C:
-                            context.write(outputKey, new Text(String.valueOf(BASE_C)));
+                            posCounter.incrementBase_C();
                             break;
                         case BASE_G:
-                            context.write(outputKey, new Text(String.valueOf(BASE_G)));
+                            posCounter.incrementBase_G();
                             break;
                         case BASE_T:
-                            context.write(outputKey, new Text(String.valueOf(BASE_T)));
+                            posCounter.incrementBase_T();
                             break;
                         default:
                             System.out.println("other base character occurred at position " + outputKey);
@@ -58,6 +69,15 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+        Iterator it = this.keyMapping.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            context.write((NaiveVariantCallerKeyWritable)pair.getKey(), (NaiveVariantCallerPosition)pair.getValue());
         }
     }
 

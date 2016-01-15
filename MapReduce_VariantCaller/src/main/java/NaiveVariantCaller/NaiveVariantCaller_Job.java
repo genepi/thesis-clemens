@@ -2,13 +2,13 @@ package NaiveVariantCaller;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.BAMInputFormat;
 import utils.NaiveVariantCallerKeyWritable;
 import utils.NaiveVariantCallerOutputFormat;
+import utils.NaiveVariantCallerPosition;
 import utils.NaiveVariantCallerValueWritable;
 
 /**
@@ -28,7 +28,7 @@ public class NaiveVariantCaller_Job {
 
         job.setInputFormatClass(BAMInputFormat.class);
         job.setMapOutputKeyClass(NaiveVariantCallerKeyWritable.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(NaiveVariantCallerPosition.class);
 
         job.setOutputKeyClass(NaiveVariantCallerKeyWritable.class);
         job.setOutputValueClass(NaiveVariantCallerValueWritable.class);
