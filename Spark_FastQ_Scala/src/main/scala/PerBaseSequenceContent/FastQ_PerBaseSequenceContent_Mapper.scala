@@ -2,7 +2,9 @@ package main.scala.PerBaseSequenceContent
 
 import org.apache.hadoop.io.Text
 import org.seqdoop.hadoop_bam.SequencedFragment
+import main.scala.utils.BaseSequenceContent
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -30,6 +32,39 @@ object FastQ_PerBaseSequenceContent_Mapper {
       }
     }
     resList.toTraversable
+  }
+
+  def map(key: Int, values: Iterable[Char]) : Pair[Int,BaseSequenceContent] = {
+    Pair(key,new BaseSequenceContent(getPercentageOfBaseOccurrences(values)))
+  }
+
+  private def getPercentageOfBaseOccurrences(values : Iterable[Char]): Map[Char,Double] = {
+    val result: mutable.Map[Char,Double] = new mutable.HashMap[Char,Double]()
+
+    var noOfBaseA: Int = 0
+    var noOfBaseC: Int = 0
+    var noOfBaseG: Int = 0
+    var noOfBaseT: Int = 0
+
+    for (base <- values) {
+      base match {
+        case BASE_A => noOfBaseA += 1
+        case BASE_C => noOfBaseC += 1
+        case BASE_G => noOfBaseG += 1
+        case BASE_T => noOfBaseT += 1
+      }
+    }
+
+    val totalNoOfBases: Int = noOfBaseA + noOfBaseC + noOfBaseG + noOfBaseT
+    result.put(BASE_A, calculatePercentageValue(noOfBaseA, totalNoOfBases))
+    result.put(BASE_C, calculatePercentageValue(noOfBaseC, totalNoOfBases))
+    result.put(BASE_G, calculatePercentageValue(noOfBaseG, totalNoOfBases))
+    result.put(BASE_T, calculatePercentageValue(noOfBaseT, totalNoOfBases))
+    result.toMap
+  }
+
+  private def calculatePercentageValue(baseOccurrence: Int, totalNoOfBases: Int): Double = {
+    (baseOccurrence * 100).toDouble / totalNoOfBases.toDouble
   }
 
 }

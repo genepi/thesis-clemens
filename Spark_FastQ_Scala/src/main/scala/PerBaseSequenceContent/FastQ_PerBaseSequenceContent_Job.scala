@@ -38,18 +38,10 @@ object FastQ_PerBaseSequenceContent_Job {
 
     val myRdd = fastQFileRDD.values
 
-    //mapping step
+    //grouping and mapping steps
     val baseCount: RDD[Pair[Int,Char]] = myRdd.flatMap( record => FastQ_PerBaseSequenceContent_Mapper.flatMap(record) )
-
-    //reduce step
-    val baseSequenceContent: RDD[Pair[Int,BaseSequenceContent]] = baseCount.combineByKey(
-      (base: Char) => FastQ_PerBaseSequenceContent_Reducer.createBaseSeqContent(base),
-      (bsc: BaseSequenceContent, base: Char) => FastQ_PerBaseSequenceContent_Reducer.countAndCalculateBasePercentage(bsc, base),
-      (a: BaseSequenceContent, b: BaseSequenceContent) => FastQ_PerBaseSequenceContent_Reducer.combine(a, b)
-    )
-
-//    baseSequenceContent.persist()
-//    baseSequenceContent.foreach( record => record._2.calculatePercentageOfBaseOccurrences() )
+    val baseCountGrouped: RDD[Pair[Int,Iterable[Char]]] = baseCount.groupByKey()
+    val baseSequenceContent: RDD[Pair[Int,BaseSequenceContent]] = baseCountGrouped.map( record => FastQ_PerBaseSequenceContent_Mapper.map(record._1,record._2) )
 
     //sort result
     val sortedRes = baseSequenceContent.sortBy( record => record._1 )
