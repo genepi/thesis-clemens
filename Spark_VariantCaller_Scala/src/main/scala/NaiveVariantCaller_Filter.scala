@@ -104,7 +104,8 @@ object NaiveVariantCaller_Filter {
   }
 
   private def sampleDiffersFromReference(position: Int, mostDominantBase: Char): Boolean = {
-    if (position >= RCRS.length || RCRS.charAt(position - 1) == mostDominantBase) {
+    val index = position - 1
+    if (index < 0 || index >= RCRS.length || RCRS.charAt(index) == mostDominantBase) {
       return false
     }
     return true

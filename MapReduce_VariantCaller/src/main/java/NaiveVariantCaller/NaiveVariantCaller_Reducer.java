@@ -320,7 +320,8 @@ public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Redu
     }
 
     private boolean sampleDiffersFromReference(int position, char mostDominantBase) {
-        if(position >= RCRS.length() || RCRS.charAt(position-1) == mostDominantBase) {
+        int index = position - 1;
+        if (index < 0 || index >= RCRS.length() || RCRS.charAt(index) == mostDominantBase) {
             return false;
         }
         return true;
