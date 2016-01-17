@@ -24,6 +24,7 @@ object FastQ_PerBaseQual_Job {
     val output = args(1)
 
     val conf = new SparkConf().setAppName("Spark_FastQ_PerBaseQual_Scala")
+
     val sc = new SparkContext(conf)
 
     val configuration = new Configuration()
@@ -48,7 +49,7 @@ object FastQ_PerBaseQual_Job {
       (a: AvgCount, b: AvgCount) => FastQ_PerBaseQual_Reducer.combine(a, b)
     )
 
-    res.sortBy( record => record._1 ).map( record => record._1 + "," + record._2 ).saveAsTextFile(output)
+    res.sortBy( record => record._1 ).map( record => record._1 + "\t" + record._2 ).saveAsTextFile(output)
   }
 
 }
