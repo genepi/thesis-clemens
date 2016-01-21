@@ -7,7 +7,6 @@ import scala.collection.mutable.Map
   * Organization: DBIS - University of Innsbruck
   * Created 26.11.15.
   */
-@SerialVersionUID(9147195128784384407L)
 class BaseSequenceContent(base: Char) extends Serializable {
   private val BASE_A: Char = 'A'
   private val BASE_C: Char = 'C'
