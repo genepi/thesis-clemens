@@ -2,8 +2,8 @@ package NaiveVariantCaller;
 
 import org.apache.hadoop.io.Text;
 import utils.DominantBasePercentageException;
-import utils.NaiveVariantCallerValueWritable;
 import utils.NaiveVariantCallerKeyWritable;
+import utils.NaiveVariantCallerValueWritable;
 
 import java.io.IOException;
 import java.util.HashMap;
