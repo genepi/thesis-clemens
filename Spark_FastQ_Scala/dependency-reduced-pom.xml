@@ -27,9 +27,7 @@
         </executions>
         <configuration>
           <transformers>
-            <transformer>
-              <mainClass>main.scala.PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>
-            </transformer>
+            <transformer />
           </transformers>
           <artifactSet>
             <includes>

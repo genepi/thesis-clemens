@@ -19,9 +19,7 @@
         </executions>
         <configuration>
           <transformers>
-            <transformer>
-              <mainClass>PerSequenceQual.FastQ_PerSequenceQual_Job</mainClass>
-            </transformer>
+            <transformer />
           </transformers>
           <artifactSet>
             <includes>

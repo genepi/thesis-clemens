@@ -45,6 +45,12 @@
             <artifactId>hadoop-bam</artifactId>
             <version>${hadoop-bam.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>${kyro.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -68,7 +74,7 @@
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <!--SET THIS depending on the Job you want to execute-->
                             <!--<mainClass>main.scala.PerBaseQual.FastQ_PerBaseQual_Job</mainClass>-->
-                            <mainClass>main.scala.PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>
+                            <!--<mainClass>main.scala.PerBaseSequenceContent.FastQ_PerBaseSequenceContent_Job</mainClass>-->
                             <!--<mainClass>main.scala.PerSequenceQual.FastQ_PerSequenceQual_Job</mainClass>-->
                         </transformer>
                     </transformers>
