@@ -26,7 +26,7 @@ object NaiveVariantCaller_Job {
     val conf = new SparkConf()
     conf.setAppName("Spark_VariantCaller_Scala")
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    conf.registerKryoClasses(Array(classOf[BaseSequenceContent]))
+    conf.registerKryoClasses(Array(classOf[NaiveVariantCallerKey], classOf[BaseSequenceContent]))
 
     val sc = new SparkContext(conf)
 
