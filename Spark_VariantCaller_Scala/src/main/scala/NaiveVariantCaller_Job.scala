@@ -1,5 +1,6 @@
 package main.scala
 
+import htsjdk.samtools.SAMRecord
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.LongWritable
 import org.apache.spark.rdd.{NewHadoopRDD, RDD}
@@ -9,7 +10,7 @@ import org.seqdoop.hadoop_bam.{BAMInputFormat, FileVirtualSplit, SAMRecordWritab
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 29.01.16.
   */
 object NaiveVariantCaller_Job {
 
@@ -25,9 +26,6 @@ object NaiveVariantCaller_Job {
 
     val conf = new SparkConf()
     conf.setAppName("Spark_VariantCaller_Scala")
-    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    conf.registerKryoClasses(Array(classOf[NaiveVariantCallerKey], classOf[BaseSequenceContent]))
-
     val sc = new SparkContext(conf)
 
     val configuration = new Configuration()
@@ -42,30 +40,33 @@ object NaiveVariantCaller_Job {
 
     //retrieve the filename
     val hadoopRdd = bamFileRDD.asInstanceOf[NewHadoopRDD[LongWritable,SAMRecordWritable]]
-    val myRdd: RDD[Pair[String,SAMRecordWritable]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
+    val myRdd: RDD[Pair[String, SAMRecord]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
       val file = inputSplit.asInstanceOf[FileVirtualSplit]
-      iterator.map { record ⇒ (file.getPath.getName, record._2) }
+      iterator.map { record ⇒ (file.getPath.getName, record._2.get()) }
     }
 
-    //mapping step
-    val baseCount: RDD[Pair[NaiveVariantCallerKey,Char]] = myRdd.flatMap( a => NaiveVariantCaller_Mapper.flatMap(a._1, a._2) )
+    val preFilter: RDD[Pair[String, SAMRecord]] = myRdd.filter( record => NaiveVariantCaller_Filter.readFullfillsRequirements(record._2) )
+    val baseCount: RDD[Pair[Pair[String, Int], Char]] = preFilter.flatMap( record => NaiveVariantCaller_Mapper.flatMap(record._1, record._2) )
 
     //reduce step
-    val baseSequenceContent: RDD[Pair[NaiveVariantCallerKey,BaseSequenceContent]] = baseCount.combineByKey(
+    val baseSequenceContent: RDD[Pair[Pair[String, Int], BaseSequenceContent]] = baseCount.combineByKey(
       (base: Char) => (NaiveVariantCaller_Reducer.createBaseSeqContent(base)),
       (bsc: BaseSequenceContent, base: Char) => (NaiveVariantCaller_Reducer.countAndCalculateBasePercentage(bsc,base)),
       (bsc1: BaseSequenceContent, bsc2: BaseSequenceContent) => (NaiveVariantCaller_Reducer.combine(bsc1,bsc2)))
 
+    //map most-dominant base
+    val baseSequenceContentMapped: RDD[Pair[Pair[String, Int], Char]] = baseSequenceContent.mapValues( record => NaiveVariantCaller_Mapper.mapMostDominantBase(record) )
+
     //filter step
-    val res: RDD[Pair[NaiveVariantCallerKey,BaseSequenceContent]] = baseSequenceContent.filter(
-      record => NaiveVariantCaller_Filter.filterLowClarityAndReferenceMatchingBases(record)
+    val res: RDD[Pair[Pair[String, Int], Char]] = baseSequenceContentMapped.filter(
+      record => NaiveVariantCaller_Filter.filterLowClarityAndReferenceMatchingBases(record._1._2, record._2)
     )
 
     //sort result
-    val sortedRes = res.sortBy( record => (record._1.getSampleIdentifier(), record._1.getPosition()) )
+    val sortedRes = res.sortBy( record => (record._1._1, record._1._2) )
 
     //format and save output to file
-    sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(output)
+    sortedRes.map(record => record._1._1 + "," + record._1._2 + "," + record._2).saveAsTextFile(output)
   }
 
 }
