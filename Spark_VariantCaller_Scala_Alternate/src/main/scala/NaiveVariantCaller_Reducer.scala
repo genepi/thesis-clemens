@@ -20,6 +20,7 @@ object NaiveVariantCaller_Reducer {
     bsc1.incrementNoOfBaseCBy(bsc2.getNoOfBaseC)
     bsc1.incrementNoOfBaseGBy(bsc2.getNoOfBaseG)
     bsc1.incrementNoOfBaseTBy(bsc2.getNoOfBaseT)
+    bsc1
   }
 
 }
