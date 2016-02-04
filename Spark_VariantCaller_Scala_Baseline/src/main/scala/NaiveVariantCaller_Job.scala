@@ -58,10 +58,10 @@ object NaiveVariantCaller_Job {
     )
 
     //sort result
-    val sortedRes = res.sortBy( record => (record._1.getSampleIdentifier(), record._1.getPosition()) )
+//    val sortedRes = res.sortBy( record => (record._1.getSampleIdentifier(), record._1.getPosition()) )
 
     //format and save output to file
-    sortedRes.map(record => record._1 + "," + record._2).saveAsTextFile(output)
+    res.map(record => record._1 + "," + record._2).saveAsTextFile(output)
   }
 
 }
