@@ -16,7 +16,7 @@ object FastQ_PerBaseQual_Job {
 
   def main(args: Array[String]): Unit = {
     if (args.length != 2) {
-      println("usage: spark-submit Spark_FastQ_Scala-1.0-SNAPSHOT.jar <fastQ input file> <output dir>")
+      println("usage: spark-submit Spark_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar <fastQ input file> <output dir>")
       return;
     }
 
