@@ -1,3 +1,5 @@
+package main.scala
+
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
