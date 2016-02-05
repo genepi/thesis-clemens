@@ -62,19 +62,24 @@ object FastQ_PerBaseQual_Job {
     //load parquet file
     val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(parquetFilePath)
 
+    //map with index
+    val myRDD: RDD[Pair[Int,AlignmentRecord]] = parquetFileRDD.mapPartitionsWithIndex{ (index, iterator) =>
+      iterator.map{ record => (index, record)}
+    }
+
     //mapping step
-    val qualityScores: RDD[Pair[Int, Int]] = parquetFileRDD.flatMap( record => FastQ_PerBaseQual_Mapper.flatMap(record) )
+    val qualityScores: RDD[Pair[Pair[Int, Int], Int]] = myRDD.flatMap( record => FastQ_PerBaseQual_Mapper.flatMap(record._1, record._2) )
 
     //reduce step
-    val countedQualityScores: RDD[Pair[Int, AvgCount]] = qualityScores.combineByKey(
+    val countedQualityScores: RDD[Pair[Pair[Int, Int], AvgCount]] = qualityScores.combineByKey(
       (qualVal: Int) => FastQ_PerBaseQual_Reducer.createAverageCount(qualVal),
       (a: AvgCount, qualVal: Int) => FastQ_PerBaseQual_Reducer.addAndCount(a, qualVal),
       (a: AvgCount, b: AvgCount) => FastQ_PerBaseQual_Reducer.combine(a, b)
     )
 
-    val res: RDD[Pair[Int, Double]] = countedQualityScores.map( record => FastQ_PerBaseQual_Mapper.map(record) );
+    val res: RDD[Pair[Pair[Int, Int], Double]] = countedQualityScores.map( record => FastQ_PerBaseQual_Mapper.map(record) );
 
-    res.sortBy( record => record._1 ).map( record => record._1 + "," + record._2 ).saveAsTextFile(outputPath)
+    res.sortBy( record => record._1 ).map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(outputPath)
   }
 
 }

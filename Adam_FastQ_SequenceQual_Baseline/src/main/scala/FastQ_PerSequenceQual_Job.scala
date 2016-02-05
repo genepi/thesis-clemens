@@ -59,8 +59,13 @@ object FastQ_PerSequenceQual_Job {
     //load parquet file
     val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(parquetFilePath)
 
+    //map with index
+    val myRDD: RDD[Pair[Int,AlignmentRecord]] = parquetFileRDD.mapPartitionsWithIndex{ (index, iterator) =>
+      iterator.map{ record => (index, record)}
+    }
+
     //mapping step
-    val qualityScores: RDD[Pair[Int,Int]] = parquetFileRDD.map( record => FastQ_PerSequenceQual_Mapper.map( record ) )
+    val qualityScores: RDD[Pair[Pair[Int, Int], Int]] = myRDD.map( record => FastQ_PerSequenceQual_Mapper.map( record._1, record._2 ) )
 
     //reduce step
     val res = qualityScores.reduceByKey(
@@ -71,7 +76,7 @@ object FastQ_PerSequenceQual_Job {
     val sortedRes = res.sortBy( record => record._1 )
 
     //format and save output to file
-    sortedRes.map( record => record._1 + "," + record._2 ).saveAsTextFile(outputPath)
+    sortedRes.map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(outputPath)
   }
 
 }
