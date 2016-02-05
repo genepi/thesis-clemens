@@ -29,12 +29,9 @@ object NaiveVariantCaller_Filter {
   def readFullfillsRequirements(record: AlignmentRecord): Boolean = {
     mappingQualitySufficient(record.getMapq) &&
       alignmentQualitySufficient(record) &&
-
-    //TODO readunmappedflag, duplicatereadflag, readlength
-
-      !record.getReadUnmappedFlag &&
-      !record.getDuplicateReadFlag &&
-      record.getReadLength > MIN_READ_LENGTH;
+      record.getReadMapped &&
+      !record.getDuplicateRead &&
+      record.getSequence.length > MIN_READ_LENGTH;
   }
 
   private def mappingQualitySufficient(mapQual: Int): Boolean = {
@@ -47,6 +44,7 @@ object NaiveVariantCaller_Filter {
 
   private def alignmentQualitySufficient(record: AlignmentRecord): Boolean = {
     //TODO getAlignmentQuality
+    //TODO vielleicht so: -> AttributeUtils.parseAttributes(record.attributes)
 
     try {
       val alignmentQuality: Int = record.getIntegerAttribute("AS")

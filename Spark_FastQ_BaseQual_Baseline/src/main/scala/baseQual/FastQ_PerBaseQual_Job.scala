@@ -3,7 +3,8 @@ package main.scala.baseQual
 import main.scala.utils.AvgCount
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.Text
-import org.apache.spark.rdd.RDD
+import org.apache.hadoop.mapreduce.lib.input.FileSplit
+import org.apache.spark.rdd.{NewHadoopRDD, RDD}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.seqdoop.hadoop_bam.{FastqInputFormat, SequencedFragment}
 
@@ -37,21 +38,28 @@ object FastQ_PerBaseQual_Job {
       classOf[FastqInputFormat],
       classOf[Text],
       classOf[SequencedFragment]
-    ).values
+    )
+
+    //retrieve the filename
+    val hadoopRdd = fastQFileRDD.asInstanceOf[NewHadoopRDD[Text, SequencedFragment]]
+    val myRdd: RDD[Pair[String, SequencedFragment]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
+      val file = inputSplit.asInstanceOf[FileSplit]
+      iterator.map { record ⇒ (file.getPath.getName, record._2) }
+    }
 
     //mapping step
-    val qualityScores: RDD[Pair[Int, Int]] = fastQFileRDD.flatMap( record => FastQ_PerBaseQual_Mapper.flatMap(record) )
+    val qualityScores: RDD[Pair[Pair[String, Int], Int]] = myRdd.flatMap( record => FastQ_PerBaseQual_Mapper.flatMap(record._1, record._2) )
 
     //reduce step
-    val countedQualityScores: RDD[Pair[Int, AvgCount]] = qualityScores.combineByKey(
+    val countedQualityScores: RDD[Pair[Pair[String, Int], AvgCount]] = qualityScores.combineByKey(
       (qualVal: Int) => FastQ_PerBaseQual_Reducer.createAverageCount(qualVal),
       (a: AvgCount, qualVal: Int) => FastQ_PerBaseQual_Reducer.addAndCount(a, qualVal),
       (a: AvgCount, b: AvgCount) => FastQ_PerBaseQual_Reducer.combine(a, b)
     )
 
-    val res: RDD[Pair[Int, Double]] = countedQualityScores.map( record => FastQ_PerBaseQual_Mapper.map(record) );
+    val res: RDD[Pair[Pair[String, Int], Double]] = countedQualityScores.map( record => FastQ_PerBaseQual_Mapper.map(record) );
 
-    res.sortBy( record => record._1 ).map( record => record._1 + "," + record._2 ).saveAsTextFile(output)
+    res.sortBy( record => record._1 ).map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(output)
   }
 
 }

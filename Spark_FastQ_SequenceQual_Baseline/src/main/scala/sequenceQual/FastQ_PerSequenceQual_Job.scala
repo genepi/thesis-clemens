@@ -2,7 +2,8 @@ package main.scala.sequenceQual
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.Text
-import org.apache.spark.rdd.RDD
+import org.apache.hadoop.mapreduce.lib.input.FileSplit
+import org.apache.spark.rdd.{NewHadoopRDD, RDD}
 import org.apache.spark.{SparkContext, SparkConf}
 import org.seqdoop.hadoop_bam.{SequencedFragment, FastqInputFormat}
 
@@ -34,10 +35,17 @@ object FastQ_PerSequenceQual_Job {
       classOf[FastqInputFormat],
       classOf[Text],
       classOf[SequencedFragment]
-    ).values
+    )
+
+    //retrieve the filename
+    val hadoopRdd = fastQFileRDD.asInstanceOf[NewHadoopRDD[Text, SequencedFragment]]
+    val myRdd: RDD[Pair[String, SequencedFragment]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
+      val file = inputSplit.asInstanceOf[FileSplit]
+      iterator.map { record ⇒ (file.getPath.getName, record._2) }
+    }
 
     //mapping step
-    val qualityScores: RDD[Pair[Int,Int]] = fastQFileRDD.map( record => FastQ_PerSequenceQual_Mapper.map( record ) )
+    val qualityScores: RDD[Pair[Pair[String, Int],Int]] = myRdd.map( record => FastQ_PerSequenceQual_Mapper.map( record._1, record._2 ) )
 
     //reduce step
     val res = qualityScores.reduceByKey(
@@ -48,7 +56,7 @@ object FastQ_PerSequenceQual_Job {
     val sortedRes = res.sortBy( record => record._1 )
 
     //format and save output to file
-    sortedRes.map( record => record._1 + "," + record._2 ).saveAsTextFile(output)
+    sortedRes.map( record => record._1._1 + "," + record._1._2  + "," + record._2 ).saveAsTextFile(output)
   }
 
 }
