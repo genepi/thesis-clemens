@@ -26,6 +26,7 @@ object NaiveVariantCaller_Job {
 
     val conf = new SparkConf()
     conf.setAppName("Spark_VariantCaller_Scala")
+    conf.registerKryoClasses(Array(classOf[BaseSequenceContent]))
     val sc = new SparkContext(conf)
 
     val configuration = new Configuration()

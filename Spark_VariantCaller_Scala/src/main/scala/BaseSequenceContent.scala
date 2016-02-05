@@ -5,7 +5,7 @@ package main.scala
   * Organization: DBIS - University of Innsbruck
   * Created 29.01.16.
   */
-class BaseSequenceContent(base: Char) extends Serializable {
+class BaseSequenceContent(base: Char) {
   private val BASE_A: Char = 'A'
   private val BASE_C: Char = 'C'
   private val BASE_G: Char = 'G'

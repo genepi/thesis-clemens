@@ -29,10 +29,12 @@ object FastQ_PerBaseQual_Job {
     val parquetFileFolder = args(1)
     val outputPath = args(2)
 
-    val sc = new SparkContext(new SparkConf()
-      .setAppName("Adam_FastQ_BaseQual_Baseline")
-      .set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
-      .set("spark.kryo.registrator","org.bdgenomics.adam.serialization.ADAMKryoRegistrator"))
+    val conf = new SparkConf()
+    conf.setAppName("Adam_FastQ_BaseQual_Baseline")
+    conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+    conf.registerKryoClasses(Array(classOf[AvgCount]))
+    val sc = new SparkContext(conf)
+
     sc.hadoopConfiguration.set("mapreduce.input.fileinputformat.inputdir", inputPath)
     val ac = new ADAMContext(sc)
 

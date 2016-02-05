@@ -22,7 +22,8 @@ object FastQ_PerSequenceQual_Job {
     val input = args(0)
     val output = args(1)
 
-    val conf = new SparkConf().setAppName("Spark_FastQ_PerSequenceQual_Baseline")
+    val conf = new SparkConf()
+    conf.setAppName("Spark_FastQ_PerSequenceQual_Baseline")
     val sc = new SparkContext(conf)
 
     val configuration = new Configuration()

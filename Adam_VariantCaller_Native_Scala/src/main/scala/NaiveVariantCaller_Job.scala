@@ -28,12 +28,13 @@ object NaiveVariantCaller_Job {
     val parquetFileFolder = args(1)
     val outputPath = args(2)
 
-    val sc = new SparkContext(new SparkConf()
-      .setAppName("Adam_VariantCaller_Native_Scala")
-      .set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
-      .set("spark.kryo.registrator","org.bdgenomics.adam.serialization.ADAMKryoRegistrator")
-      .registerKryoClasses(Array(classOf[BaseSequenceContent], classOf[NaiveVariantCallerKey]))
-    )
+    val conf = new SparkConf()
+    conf.setAppName("Adam_VariantCaller_Native_Scala")
+    conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+    conf.set("spark.kryo.registrator","org.bdgenomics.adam.serialization.ADAMKryoRegistrator")
+    conf.registerKryoClasses(Array(classOf[BaseSequenceContent], classOf[NaiveVariantCallerKey]))
+    val sc = new SparkContext(conf)
+
     sc.hadoopConfiguration.set("mapreduce.input.fileinputformat.inputdir", inputPath)
     val ac = new ADAMContext(sc)
 
