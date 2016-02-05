@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.FastqInputFormat;
+import utils.IdentifierPositionKeyWritable;
 
 /**
  * master-thesis Clemens Banas
@@ -26,10 +27,10 @@ public class FastQ_PerSequenceQual_Job {
         job.setReducerClass(FastQ_PerSequenceQual_Reducer.class);
 
         job.setInputFormatClass(FastqInputFormat.class);
-        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputKeyClass(IdentifierPositionKeyWritable.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-        job.setOutputKeyClass(IntWritable.class);
+        job.setOutputKeyClass(IdentifierPositionKeyWritable.class);
         job.setOutputValueClass(IntWritable.class);
 
         job.setOutputFormatClass(FastQ_PerSequenceQual_OutputFormat.class);

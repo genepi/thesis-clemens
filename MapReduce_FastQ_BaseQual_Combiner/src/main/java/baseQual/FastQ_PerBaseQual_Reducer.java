@@ -2,6 +2,7 @@ package baseQual;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
+import utils.IdentifierPositionKeyWritable;
 import utils.QualityCountHelperWritable;
 
 import java.io.IOException;
@@ -11,10 +12,10 @@ import java.io.IOException;
  * Organization: DBIS - University of Innsbruck
  * Created 04.02.16.
  */
-public class FastQ_PerBaseQual_Reducer extends org.apache.hadoop.mapreduce.Reducer<IntWritable, QualityCountHelperWritable, IntWritable, DoubleWritable> {
+public class FastQ_PerBaseQual_Reducer extends org.apache.hadoop.mapreduce.Reducer<IdentifierPositionKeyWritable, QualityCountHelperWritable, IdentifierPositionKeyWritable, DoubleWritable> {
 
     @Override
-    protected void reduce(IntWritable key, Iterable<QualityCountHelperWritable> values, Context context) throws IOException, InterruptedException {
+    protected void reduce(IdentifierPositionKeyWritable key, Iterable<QualityCountHelperWritable> values, Context context) throws IOException, InterruptedException {
         context.write(key, getMeanValue(values));
     }
 
