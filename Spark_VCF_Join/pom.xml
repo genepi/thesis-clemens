@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>at.ac.uibk.spark-fastq-baseQual-baseline.thesis.banas</groupId>
-    <artifactId>Spark_FastQ_BaseQual_Baseline</artifactId>
+    <groupId>at.ac.uibk.spark-vcf-join.thesis.banas</groupId>
+    <artifactId>Spark_VCF_Join</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

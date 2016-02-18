@@ -82,7 +82,6 @@ public class VCF_MapSideJoin_Mapper extends org.apache.hadoop.mapreduce.Mapper<L
             res.setId(variantContext.getID());
             res.setInfo(ParsingUtils.sortedString(variantContext.getAttributes()));
             context.write(null, res);
-
         }
     }
 

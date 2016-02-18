@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>at.ac.uibk.adam-vcf-join.thesis.banas</groupId>
+    <artifactId>Adam_VCF_Join</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
+        <hadoop-bam.version>7.3.1</hadoop-bam.version>
+        <parquet.version>1.8.1</parquet.version>
+        <adam.version>0.18.2</adam.version>
+        <bdg-formats.version>0.6.1</bdg-formats.version>
+        <utils.version>0.2.3</utils.version>
+        <htsjdk.version>1.139</htsjdk.version>
+        <guava.version>16.0.1</guava.version>
+        <netflix-server.version>0.12.2</netflix-server.version>
+        <fastutil.version>7.0.8</fastutil.version>
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>genepi-hadoop</id>
+            <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>project.local</id>
+            <name>project</name>
+            <url>file://${basedir}/libs</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>genepi</groupId>
+            <artifactId>genepi-hadoop</artifactId>
+            <version>${genepi-yarn.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>seqdoop</groupId>
+            <artifactId>hadoop-bam</artifactId>
+            <version>${hadoop-bam.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bdgenomics.adam</groupId>
+            <artifactId>adam-core_2.10</artifactId>
+            <version>${adam.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bdgenomics.bdg-formats</groupId>
+            <artifactId>bdg-formats</artifactId>
+            <version>${bdg-formats.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bdgenomics.utils</groupId>
+            <artifactId>utils-misc_2.10</artifactId>
+            <version>${utils.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.samtools</groupId>
+            <artifactId>htsjdk</artifactId>
+            <version>${htsjdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version> <!-- note: version 17.0 breaks hadoop 2.6+ at runtime -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.servo</groupId>
+            <artifactId>servo-core</artifactId>
+            <version>${netflix-server.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>${fastutil.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+                <configuration>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>main.scala.VCF_Join_Job</mainClass>
+                        </transformer>
+                    </transformers>
+                    <artifactSet>
+                        <includes>
+                            <include>org.bdgenomics.*:*:*:*</include>
+                            <include>org.apache.parquet:*:*:*</include>
+                            <include>com.github.samtools:*:*:*</include>
+                            <include>com.netflix.servo:*:*:*</include>
+                            <include>com.google.guava:*:*:*</include>
+                            <include>it.unimi.dsi:*:*:*</include>
+                            <include>genepi:*</include>
+                            <include>seqdoop:*</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
