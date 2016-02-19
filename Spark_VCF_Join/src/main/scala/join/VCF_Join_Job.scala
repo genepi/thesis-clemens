@@ -16,7 +16,7 @@ object VCF_Join_Job {
 
   def main(args: Array[String]): Unit = {
     if (args.length != 3) {
-      println("usage: spark-submit Spark_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar <vcf small input file> <vcf large input file> <output dir>")
+      println("usage: spark-submit Spark_VCF_Join-1.0-SNAPSHOT.jar <vcf small input file> <vcf reference input file> <output dir>")
       return;
     }
 
@@ -60,12 +60,10 @@ object VCF_Join_Job {
     val largeJoinRDDRelation: RDD[Pair[Pair[Int, Int], VariantContext]] = vcfLargeFileRDDMapped.keyBy( record => VCF_Join_Mapper.mapKeyBy(record) )
 
     // join the two RDDs according to their key (composed of chromosome & position)
-    val joinedRDD: RDD[Pair[Pair[Int, Int], Pair[VariantContext, VariantContext]]] = smallJoinRDDRelation.join(largeJoinRDDRelation)
+    val joinedRDD: RDD[Pair[Pair[Int, Int], Pair[VariantContext, Option[VariantContext]]]] = smallJoinRDDRelation.leftOuterJoin(largeJoinRDDRelation)
 
-    //TODO create the desired output
-
-    joinedRDD.sortBy( record => record._1 ).map( record => record._1._1 + "\t" + record._1._2 + record._2._1).saveAsTextFile(output)
-
+    val res = joinedRDD.sortBy( record => record._1 ).map( record => VCF_Join_Mapper.constructResult(record._1, record._2) )
+    res.saveAsTextFile(output)
   }
 
 }

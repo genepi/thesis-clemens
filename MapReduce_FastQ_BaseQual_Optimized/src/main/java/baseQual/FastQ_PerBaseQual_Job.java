@@ -20,7 +20,7 @@ public class FastQ_PerBaseQual_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "MR_FastQ_PerBaseQual_Baseline");
+        Job job = Job.getInstance(conf, "MR_FastQ_PerBaseQual_Optimized");
 
         job.setJarByClass(FastQ_PerBaseQual_Job.class);
         job.setMapperClass(FastQ_PerBaseQual_Mapper.class);

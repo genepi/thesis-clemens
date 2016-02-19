@@ -20,7 +20,6 @@ public class NaiveVariantCaller_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        conf.set("mapreduce.map.java.opts", "-Xmx4000M");
         Job job = Job.getInstance(conf, "MR_VariantCaller_Combiner");
 
         job.setJarByClass(NaiveVariantCaller_Job.class);
