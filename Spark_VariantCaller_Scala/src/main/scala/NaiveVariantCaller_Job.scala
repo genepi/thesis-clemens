@@ -17,7 +17,7 @@ object NaiveVariantCaller_Job {
   def main(args: Array[String]): Unit = {
 
     if (args.length != 2) {
-      println("usage: /Users/Clemens/thesis/binaries/spark-1.4.1-bin-hadoop2.6/bin/spark-submit --master local[2] /Users/Clemens/thesis/Spark_VariantCaller_Scala/target/Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar <bam input file> <output dir>")
+      println("usage: spark-submit Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar <bam input file> <output dir>")
       return;
     }
 
@@ -62,9 +62,6 @@ object NaiveVariantCaller_Job {
     val res: RDD[Pair[Pair[String, Int], Char]] = baseSequenceContentMapped.filter(
       record => NaiveVariantCaller_Filter.filterLowClarityAndReferenceMatchingBases(record._1._2, record._2)
     )
-
-    //sort result
-//    val sortedRes = res.sortBy( record => (record._1._1, record._1._2) )
 
     //format and save output to file
     res.map(record => record._1._1 + "," + record._1._2 + "," + record._2).saveAsTextFile(output)
