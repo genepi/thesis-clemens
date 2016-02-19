@@ -6,27 +6,29 @@ import org.apache.hadoop.io.WritableComparator;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 12.02.16.
- *
- * "Groups" values together according to the natural key. Ensures that K,V go to same reducers.
+ * Created 18.02.16.
  */
 public class NaturalKeyGroupingComparator extends WritableComparator {
 
     protected NaturalKeyGroupingComparator() {
-        super(ChromPositionOrderKey.class, true);
+        super(ChromOrderKeyWritable.class, true);
     }
 
     @Override
     public int compare(WritableComparable w1, WritableComparable w2) {
-        ChromPositionOrderKey k1 = (ChromPositionOrderKey)w1;
-        ChromPositionOrderKey k2 = (ChromPositionOrderKey)w2;
+        ChromOrderKeyWritable k1 = (ChromOrderKeyWritable)w1;
+        ChromOrderKeyWritable k2 = (ChromOrderKeyWritable)w2;
 
-        if (k1.getChromosome() != k2.getChromosome()) {
-            return (k1.getChromosome() < k2.getChromosome() ? -1 : 1);
-        } else if (k1.getPosition() != k2.getPosition()) {
-            return (k1.getPosition() < k2.getPosition() ? -1 : 1);
+        int k1Chrom = k1.getChromosome();
+        int k1Pos = k1.getPosition();
+        int k2Chrom = k2.getChromosome();
+        int k2Pos = k2.getPosition();
+
+        int result = (k1Chrom < k2Chrom ? -1 : (k1Chrom == k2Chrom ? 0 : 1));
+        if (0 == result) {
+            result = (k1Pos < k2Pos ? -1 : (k1Pos == k2Pos ? 0 : 1));
         }
-        return 0;
+        return result;
     }
 
 }

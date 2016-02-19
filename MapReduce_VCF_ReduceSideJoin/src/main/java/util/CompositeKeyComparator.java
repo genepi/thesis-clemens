@@ -6,29 +6,32 @@ import org.apache.hadoop.io.WritableComparator;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 12.02.16.
- *
- * Used for the secondary sorting process. Takes natural key and joinOrder into account.
+ * Created 18.02.16.
  */
 public class CompositeKeyComparator extends WritableComparator {
 
     protected CompositeKeyComparator() {
-        super(ChromPositionOrderKey.class, true);
+        super(ChromOrderKeyWritable.class, true);
     }
 
     @Override
     public int compare(WritableComparable w1, WritableComparable w2) {
-        ChromPositionOrderKey k1 = (ChromPositionOrderKey)w1;
-        ChromPositionOrderKey k2 = (ChromPositionOrderKey)w2;
+        ChromOrderKeyWritable k1 = (ChromOrderKeyWritable)w1;
+        ChromOrderKeyWritable k2 = (ChromOrderKeyWritable)w2;
 
-        int result = 0;
-        if (k1.getChromosome() != k2.getChromosome()) {
-            result = (k1.getChromosome() < k2.getChromosome() ? -1 : 1);
-        } else if (k1.getPosition() != k2.getPosition()) {
-            result = (k1.getPosition() < k2.getPosition() ? -1 : 1);
+        int k1Chrom = k1.getChromosome();
+        int k1Pos = k1.getPosition();
+        int k1OrderVal = k1.getOrderVal();
+        int k2Chrom = k2.getChromosome();
+        int k2Pos = k2.getPosition();
+        int k2OrderVal = k2.getOrderVal();
+
+        int result = (k1Chrom < k2Chrom ? -1 : (k1Chrom == k2Chrom ? 0 : 1));
+        if (0 == result) {
+            result = (k1Pos < k2Pos ? -1 : (k1Pos == k2Pos ? 0 : 1));
         }
         if (0 == result) {
-            result = (k1.getJoinOrder() < k2.getJoinOrder() ? -1 : (k1.getJoinOrder() == k2.getJoinOrder() ? 0 : 1));
+            result = (k1OrderVal < k2OrderVal ? -1 : (k1OrderVal == k2OrderVal ? 0 : 1));
         }
         return result;
     }
