@@ -28,29 +28,29 @@ spark-submit --master local[2] Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar input/
 ### Programs
 
 #### MapReduce:
-* [ ] *MapReduce_VariantCaller_Baseline*
-* [ ] *MapReduce_VariantCaller_Combiner*
-* [ ] *MapReduce_VariantCaller_Optimized*
-* [ ] *MapReduce_VariantCaller_Optimized_Combiner*
-* [ ] *MapReduce_FastQ_BaseQual_Baseline*
-* [ ] *MapReduce_FastQ_BaseQual_Combiner*
-* [ ] *MapReduce_FastQ_BaseQual_Optimized*
-* [ ] *MapReduce_FastQ_SequenceQual_Baseline*
-* [ ] *MapReduce_FastQ_SequenceQual_Combiner*
-* [ ] *MapReduce_FastQ_SequenceQual_Optimized*
+* [x] *MapReduce_VariantCaller_Baseline*
+* [x] *MapReduce_VariantCaller_Combiner*
+* [x] *MapReduce_VariantCaller_Optimized*
+* [x] *MapReduce_VariantCaller_Optimized_Combiner*
+* [x] *MapReduce_FastQ_BaseQual_Baseline*
+* [x] *MapReduce_FastQ_BaseQual_Combiner*
+* [x] *MapReduce_FastQ_BaseQual_Optimized*
+* [x] *MapReduce_FastQ_SequenceQual_Baseline*
+* [x] *MapReduce_FastQ_SequenceQual_Combiner*
+* [x] *MapReduce_FastQ_SequenceQual_Optimized*
 * [ ] *MapReduce_VCF_ReduceSideJoin*
 
 #### Spark:
-* [ ] *Spark_VariantCaller_Scala_Baseline*
-* [ ] *Spark_VariantCaller_Scala*
-* [ ] *Spark_FastQ_BaseQual_Baseline*
-* [ ] *Spark_FastQ_SequenceQual_Baseline*
+* [x] *Spark_VariantCaller_Scala_Baseline*
+* [x] *Spark_VariantCaller_Scala*
+* [x] *Spark_FastQ_BaseQual_Baseline*
+* [x] *Spark_FastQ_SequenceQual_Baseline*
 * [ ] *Spark_VCF_Join*
 
 #### ADAM:
 * [ ] *Adam_VariantCaller_Native_Scala*
-* [ ] *Adam_FastQ_BaseQual_Baseline*
-* [ ] *Adam_FastQ_SequenceQual_Baseline*
+* [x] *Adam_FastQ_BaseQual_Baseline*
+* [x] *Adam_FastQ_SequenceQual_Baseline*
 * [ ] *Adam_VCF_Join*
 
 
