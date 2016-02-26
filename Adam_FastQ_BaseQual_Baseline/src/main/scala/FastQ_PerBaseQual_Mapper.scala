@@ -1,8 +1,6 @@
 package main.scala
 
-import main.utils.AvgCount
 import org.bdgenomics.formats.avro.AlignmentRecord
-
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -15,9 +13,6 @@ object FastQ_PerBaseQual_Mapper {
 
   def flatMap(sampleIdentifier:Int, record: AlignmentRecord): TraversableOnce[Pair[Pair[Int, Int], Int]] = {
     val resList = new ListBuffer[Pair[Pair[Int, Int], Int]]()
-
-    //TODO delete replaced line of code...
-//    val quality: Text = record.getQuality
 
     val quality: String = record.getQual
     for(i <- 0 until quality.length) {

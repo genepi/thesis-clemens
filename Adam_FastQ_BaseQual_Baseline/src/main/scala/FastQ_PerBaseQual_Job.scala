@@ -1,7 +1,7 @@
 package main.scala
 
 import genepi.hadoop.HdfsUtil
-import main.utils.AvgCount
+
 import org.apache.hadoop.fs.Path
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}

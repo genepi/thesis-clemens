@@ -1,4 +1,4 @@
-package main.utils
+package main.scala
 
 /**
   * master-thesis Clemens Banas

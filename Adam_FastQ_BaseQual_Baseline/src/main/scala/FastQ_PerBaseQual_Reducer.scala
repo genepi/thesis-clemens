@@ -1,7 +1,5 @@
 package main.scala
 
-import main.utils.AvgCount
-
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
