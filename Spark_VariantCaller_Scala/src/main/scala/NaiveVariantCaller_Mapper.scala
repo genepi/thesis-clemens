@@ -38,8 +38,6 @@ object NaiveVariantCaller_Mapper {
         )
       }
     }
-    // TODO remove println
-//    println("SIZE OF THE LISTBUFFER: " + resList.size)
     resList.toTraversable
   }
 
