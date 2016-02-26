@@ -10,6 +10,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <scala.version>2.10.4</scala.version>
         <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
         <hadoop-bam.version>7.3.1</hadoop-bam.version>
         <parquet.version>1.8.1</parquet.version>
@@ -20,11 +21,18 @@
         <guava.version>16.0.1</guava.version>
         <netflix-server.version>0.12.2</netflix-server.version>
         <fastutil.version>7.0.8</fastutil.version>
+        <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
     </properties>
 
     <repositories>
+        <repository>
+            <id>scala-tools.org</id>
+            <name>Scala-tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </repository>
+
         <repository>
             <id>genepi-hadoop</id>
             <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
@@ -41,7 +49,21 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>scala-tools.org</id>
+            <name>Scala-tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>genepi</groupId>
             <artifactId>genepi-hadoop</artifactId>
@@ -111,6 +133,19 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>${maven-scala-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

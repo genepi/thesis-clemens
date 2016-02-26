@@ -7,6 +7,19 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>${maven-scala-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
@@ -28,7 +41,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>main.scala.baseQual.FastQ_PerBaseQual_Job</mainClass>
+              <mainClass>main.scala.FastQ_PerBaseQual_Job</mainClass>
             </transformer>
           </transformers>
           <artifactSet>
@@ -42,6 +55,11 @@
   </build>
   <repositories>
     <repository>
+      <id>scala-tools.org</id>
+      <name>Scala-tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </repository>
+    <repository>
       <snapshots>
         <updatePolicy>always</updatePolicy>
       </snapshots>
@@ -54,7 +72,20 @@
       <url>file://${basedir}/libs</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>scala-tools.org</id>
+      <name>Scala-tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.10.4</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>genepi</groupId>
       <artifactId>genepi-hadoop</artifactId>
@@ -65,9 +96,11 @@
   <properties>
     <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
     <hadoop-bam.version>7.3.1</hadoop-bam.version>
+    <scala.version>2.10.4</scala.version>
     <java.version>1.8</java.version>
     <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     <maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
+    <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
   </properties>
 </project>
 
