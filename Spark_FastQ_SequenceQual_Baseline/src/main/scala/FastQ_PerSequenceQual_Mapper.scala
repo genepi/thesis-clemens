@@ -1,4 +1,4 @@
-package main.scala.sequenceQual
+package main.scala
 
 import org.apache.hadoop.io.Text
 import org.seqdoop.hadoop_bam.SequencedFragment

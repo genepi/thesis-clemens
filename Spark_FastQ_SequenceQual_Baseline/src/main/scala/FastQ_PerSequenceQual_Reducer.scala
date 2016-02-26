@@ -1,4 +1,4 @@
-package main.scala.sequenceQual
+package main.scala
 
 /**
   * master-thesis Clemens Banas

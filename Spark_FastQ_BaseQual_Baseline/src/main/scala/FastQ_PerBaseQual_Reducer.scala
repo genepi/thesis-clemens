@@ -1,4 +1,4 @@
-package main.scala.baseQual
+package main.scala
 
 import main.scala.utils.AvgCount
 

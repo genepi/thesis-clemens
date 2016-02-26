@@ -1,9 +1,10 @@
-package main.scala.baseQual
+package main.scala
 
 import main.scala.utils.AvgCount
-import org.seqdoop.hadoop_bam.SequencedFragment
-import scala.collection.mutable.ListBuffer
 import org.apache.hadoop.io.Text
+import org.seqdoop.hadoop_bam.SequencedFragment
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
