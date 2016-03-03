@@ -46,7 +46,7 @@
           </transformers>
           <artifactSet>
             <includes>
-              <include>seqdoop:*</include>
+              <include>org.seqdoop:*</include>
             </includes>
           </artifactSet>
         </configuration>
@@ -65,11 +65,6 @@
       </snapshots>
       <id>genepi-hadoop</id>
       <url>https://raw.github.com/genepi/maven-repository/mvn-repo/</url>
-    </repository>
-    <repository>
-      <id>project.local</id>
-      <name>project</name>
-      <url>file://${basedir}/libs</url>
     </repository>
   </repositories>
   <pluginRepositories>
