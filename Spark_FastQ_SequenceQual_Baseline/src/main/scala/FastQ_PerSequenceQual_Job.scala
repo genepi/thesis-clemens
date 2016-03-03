@@ -52,11 +52,8 @@ object FastQ_PerSequenceQual_Job {
       (a: Int, b: Int) => FastQ_PerSequenceQual_Reducer.combine(a, b)
     )
 
-    //sort result
-    val sortedRes = res.sortBy( record => record._1 )
-
     //format and save output to file
-    sortedRes.map( record => record._1._1 + "," + record._1._2  + "," + record._2 ).saveAsTextFile(output)
+    res.map( record => record._1._1 + "," + record._1._2  + "," + record._2 ).saveAsTextFile(output)
   }
 
 }

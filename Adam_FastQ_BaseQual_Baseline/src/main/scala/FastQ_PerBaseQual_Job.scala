@@ -79,7 +79,7 @@ object FastQ_PerBaseQual_Job {
 
     val res: RDD[Pair[Pair[Int, Int], Double]] = countedQualityScores.map( record => FastQ_PerBaseQual_Mapper.map(record) );
 
-    res.sortBy( record => record._1 ).map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(outputPath)
+    res.map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(outputPath)
   }
 
 }
