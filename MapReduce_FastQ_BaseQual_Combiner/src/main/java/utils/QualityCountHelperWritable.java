@@ -24,7 +24,7 @@ public class QualityCountHelperWritable implements Writable {
     }
 
     public QualityCountHelperWritable(int sumOfQualityValues) {
-        this(sumOfQualityValues, 0);
+        this(sumOfQualityValues, 1);
     }
 
     public int getSumOfQualityValues() {

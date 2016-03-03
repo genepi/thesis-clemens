@@ -49,8 +49,8 @@ spark-submit --master local[2] Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar input/
 
 #### ADAM:
 * [ ] *Adam_VariantCaller_Native_Scala*
-* [x] *Adam_FastQ_BaseQual_Baseline*
-* [x] *Adam_FastQ_SequenceQual_Baseline*
+* [ ] *Adam_FastQ_BaseQual_Baseline*
+* [ ] *Adam_FastQ_SequenceQual_Baseline*
 * [ ] *Adam_VCF_Join*
 
 

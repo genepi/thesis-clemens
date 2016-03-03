@@ -1,0 +1,42 @@
+name: Clemens Thesis - VariantCalling Spark Optimized
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: VariantCaller using Spark (Optimized)
+    spark: Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar
+    mainClass: main.scala.NaiveVariantCaller_Job
+    params: $input $outspark
+
+  inputs:
+
+     - id: input
+       description: Input
+       type: text
+       value: eval-clemens/test-input
+
+  outputs:
+
+    - id: outspark
+      description: Output Spark
+      type: hdfs-folder
+      download: true
+      temp: false
+      mergeOutput: true
+      temp: false
+      removeHeader: false

@@ -1,0 +1,50 @@
+name: Clemens Thesis - VariantCalling ADAM Native
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: VariantCaller using Adam
+    spark: Adam_VariantCaller_Scala-1.0-SNAPSHOT.jar
+    mainClass: main.scala.NaiveVariantCaller_Job
+    params: $input $tmpadam $outadam
+
+  inputs:
+
+     - id: input
+       description: Input
+       type: text
+       value: eval-clemens/test-input
+
+  outputs:
+
+    - id: tmpadam
+      description: Tmp-Output ADAM
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: true
+      removeHeader: false
+
+    - id: outadam
+      description: Output ADAM
+      type: hdfs-folder
+      download: true
+      temp: false
+      mergeOutput: true
+      temp: false
+      removeHeader: false

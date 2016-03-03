@@ -64,6 +64,13 @@
     </dependencies>
 
     <build>
+      <resources>
+            <resource>
+                <directory>resources</directory>
+                <targetPath>..</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.scala-tools</groupId>
@@ -102,6 +109,7 @@
                     <artifactSet>
                         <includes>
                             <include>org.seqdoop:*</include>
+                            <include>com.github.samtools:*</include>
                         </includes>
                     </artifactSet>
                 </configuration>

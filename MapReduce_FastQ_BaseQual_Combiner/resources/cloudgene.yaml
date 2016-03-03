@@ -1,0 +1,41 @@
+name: Clemens Thesis FastQ BaseQual MR Combiner
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: FastQ PerBaseQual Combiner using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_Combiner-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perBaseQual_combiner
+
+  inputs:
+
+     - id: input
+       description: Input
+       type: text
+       value: eval-clemens/fastq-small
+
+  outputs:
+
+    - id: outmapred_perBaseQual_combiner
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false

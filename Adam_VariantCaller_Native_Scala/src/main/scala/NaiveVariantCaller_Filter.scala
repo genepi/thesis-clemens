@@ -46,18 +46,18 @@ object NaiveVariantCaller_Filter {
     //TODO getAlignmentQuality
     //TODO vielleicht so: -> AttributeUtils.parseAttributes(record.attributes)
 
-    try {
-      val alignmentQuality: Int = record.getIntegerAttribute("AS")
-      if (alignmentQuality >= MIN_ALIGN_QUAL) {
-        return true
-      }
-    } catch {
-      case e: NullPointerException => {
-        //attribute value is not mandatory
-        //therefore return true
-        return true
-      }
-    }
+//    try {
+//      val alignmentQuality: Int = record.getIntegerAttribute("AS")
+//      if (alignmentQuality >= MIN_ALIGN_QUAL) {
+//        return true
+//      }
+//    } catch {
+//      case e: NullPointerException => {
+//        //attribute value is not mandatory
+//        //therefore return true
+//        return true
+//      }
+//    }
     return false
   }
 

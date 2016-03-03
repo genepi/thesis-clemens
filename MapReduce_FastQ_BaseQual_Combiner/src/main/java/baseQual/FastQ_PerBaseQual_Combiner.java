@@ -18,7 +18,7 @@ public class FastQ_PerBaseQual_Combiner extends org.apache.hadoop.mapreduce.Redu
         int numberOfQualityValues = 0;
         for (QualityCountHelperWritable qualCounter : values) {
             sumOfQualityValues += qualCounter.getSumOfQualityValues();
-            numberOfQualityValues++;
+            numberOfQualityValues += qualCounter.getNumberOfQualityValues();
         }
         context.write(key, new QualityCountHelperWritable(sumOfQualityValues, numberOfQualityValues));
     }

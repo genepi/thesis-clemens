@@ -1,0 +1,178 @@
+name: Clemens Thesis FastQ complete
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: FastQ PerBaseQual Baseline using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perBaseQual_baseline
+
+  - name: FastQ PerBaseQual Combiner using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_Combiner-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perBaseQual_combiner
+
+  - name: FastQ PerBaseQual Optimized using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_Optimized-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perBaseQual_optimized
+
+  - name: FastQ PerSeqQual Baseline using MapReduce
+    jar: Mapreduce_FastQ_SequenceQual_Baseline-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perSeqQual_baseline
+
+  - name: FastQ PerSeqQual Combiner using MapReduce
+    jar: Mapreduce_FastQ_SequenceQual_Combiner-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perSeqQual_combiner
+
+  - name: FastQ PerSeqQual Optimized using MapReduce
+    jar: Mapreduce_FastQ_SequenceQual_Optimized-1.0-SNAPSHOT.jar
+    params: $input $outmapred_perSeqQual_optimized
+
+  - name: FastQ PerBaseQual Baseline using Spark
+    spark: Spark_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
+    mainClass: main.scala.FastQ_PerBaseQual_Job
+    params: $input $outspark_perBaseQual_baseline
+
+  - name: FastQ PerSeqQual Baseline using Spark
+    spark: Spark_FastQ_SequenceQual_Baseline-1.0-SNAPSHOT.jar
+    mainClass: main.scala.FastQ_PerSequenceQual_Job
+    params: $input $outspark_perSeqQual_baseline
+
+  - name: FastQ PerBaseQual Baseline using ADAM
+    spark: Adam_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
+    mainClass: main.scala.FastQ_PerBaseQual_Job
+    params: $input $tmpadam_1 $outadam_perBaseQual_baseline
+
+  - name: FastQ PerSeqQual Baseline using ADAM
+    spark: Adam_FastQ_SequenceQual_Baseline-1.0-SNAPSHOT.jar
+    mainClass: main.scala.FastQ_PerSequenceQual_Job
+    params: $input $tmpadam_2 $outadam_perSeqQual_baseline
+
+  inputs:
+
+     - id: input
+       description: Input
+       type: text
+       value: eval-clemens/fastq-small
+
+  outputs:
+
+    - id: outmapred_perBaseQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outmapred_perBaseQual_combiner
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outmapred_perBaseQual_optimized
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outmapred_perSeqQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outmapred_perSeqQual_combiner
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outmapred_perSeqQual_optimized
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outspark_perBaseQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outspark_perSeqQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: tmpadam_1
+      description: Tmp-Output-1 ADAM
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: true
+      removeHeader: false
+
+    - id: tmpadam_2
+      description: Tmp-Output-2 ADAM
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: true
+      removeHeader: false
+
+    - id: outadam_perBaseQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outadam_perSeqQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false

@@ -1,0 +1,50 @@
+name: Clemens Thesis FastQ BaseQual ADAM Baseline
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: FastQ PerBaseQual Baseline using ADAM
+    spark: Adam_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
+    mainClass: main.scala.FastQ_PerBaseQual_Job
+    params: $input $tmpadam_1 $outadam_perBaseQual_baseline
+
+  inputs:
+
+     - id: input
+       description: Input
+       type: text
+       value: eval-clemens/fastq-small
+
+  outputs:
+
+    - id: tmpadam_1
+      description: Tmp-Output-1 ADAM
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: true
+      removeHeader: false
+
+    - id: outadam_perBaseQual_baseline
+      description: Output Mapreduce
+      type: hdfs-folder
+      download: true
+      temp: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
