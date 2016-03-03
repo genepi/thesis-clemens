@@ -23,12 +23,6 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-
-        <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file://${basedir}/libs</url>
-        </repository>
     </repositories>
 
 
@@ -40,7 +34,7 @@
         </dependency>
 
         <dependency>
-            <groupId>seqdoop</groupId>
+            <groupId>org.seqdoop</groupId>
             <artifactId>hadoop-bam</artifactId>
             <version>${hadoop-bam.version}</version>
         </dependency>
@@ -61,7 +55,7 @@
                     </transformers>
                     <artifactSet>
                         <includes>
-                            <include>seqdoop:*</include>
+                            <include>org.seqdoop:*</include>
                         </includes>
                     </artifactSet>
                 </configuration>
