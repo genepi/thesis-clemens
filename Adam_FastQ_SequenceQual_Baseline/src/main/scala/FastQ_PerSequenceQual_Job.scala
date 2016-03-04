@@ -1,14 +1,12 @@
 package main.scala
 
 import genepi.hadoop.HdfsUtil
-import org.apache.hadoop.fs.Path
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.bdgenomics.adam.projections.{AlignmentRecordField, Projection}
 import org.bdgenomics.adam.rdd.ADAMContext
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.AlignmentRecord
-
-import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
@@ -35,37 +33,40 @@ object FastQ_PerSequenceQual_Job {
     sc.hadoopConfiguration.set("mapreduce.input.fileinputformat.inputdir", inputPath)
     val ac = new ADAMContext(sc)
 
-    //convert FastQ files to ADAM
-    var fastQFileRDD: RDD[AlignmentRecord] = null
-
     if (inputPath.toLowerCase().endsWith(".fastq") || inputPath.toLowerCase().endsWith(".fq")) {
       val parentFolderPath = inputPath.substring(0, inputPath.lastIndexOf("/"))
       val hdfsFilePaths: List[String] = HdfsUtil.getFiles(parentFolderPath)
-      fastQFileRDD = ac.loadAlignments(hdfsFilePaths.get(0))
+      this.processJob(ac, hdfsFilePaths.get(0), parquetFileFolder, outputPath)
     } else {
-      val filePaths = new ListBuffer[Path]
       val hdfsFilePaths: List[String] = HdfsUtil.getFiles(inputPath)
-      hdfsFilePaths.foreach( filePath => filePaths += new Path(filePath) )
-      if (filePaths.size == 0) {
+      if (hdfsFilePaths.size == 0) {
         throw new IllegalArgumentException("input folder is empty")
       }
-      fastQFileRDD = ac.loadAlignmentsFromPaths(filePaths)
+      hdfsFilePaths.foreach( path => this.processJob(ac, path, parquetFileFolder, outputPath) )
     }
+  }
+
+  private def processJob(ac: ADAMContext, filePath: String, parquetFileFolder: String, outputPath: String): Unit = {
+    //convert FastQ files to ADAM
+    val fastQFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(filePath)
+    val fileName = filePath.substring(filePath.lastIndexOf('/')+1, filePath.length())
 
     //store as parquet files
-    val parquetFilePath = parquetFileFolder + "/tmp" + parquetFileEnding
+    val parquetFilePath = parquetFileFolder + "/" + fileName + parquetFileEnding
     fastQFileRDD.adamParquetSave(parquetFilePath)
 
     //load parquet file
-    val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(parquetFilePath)
-
-    //map with index
-    val myRDD: RDD[Pair[Int,AlignmentRecord]] = parquetFileRDD.mapPartitionsWithIndex{ (index, iterator) =>
-      iterator.map{ record => (index, record)}
-    }
+    val parquetFileRDD: RDD[AlignmentRecord] = ac.loadAlignments(
+      parquetFilePath,
+      projection = Some(
+        Projection(
+          AlignmentRecordField.qual
+        )
+      )
+    )
 
     //mapping step
-    val qualityScores: RDD[Pair[Pair[Int, Int], Int]] = myRDD.map( record => FastQ_PerSequenceQual_Mapper.map( record._1, record._2 ) )
+    val qualityScores: RDD[Pair[Int, Int]] = parquetFileRDD.map( record => FastQ_PerSequenceQual_Mapper.map( record ) )
 
     //reduce step
     val res = qualityScores.reduceByKey(
@@ -73,7 +74,7 @@ object FastQ_PerSequenceQual_Job {
     )
 
     //format and save output to file
-    res.map( record => record._1._1 + "," + record._1._2 + "," + record._2 ).saveAsTextFile(outputPath)
+    res.sortBy(record => (record._1)).map( record => fileName + "," + record._1 + "," + record._2 ).saveAsTextFile(outputPath + "/" + fileName.substring(0, fileName.lastIndexOf('.')))
   }
 
 }

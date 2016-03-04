@@ -10,8 +10,8 @@ import org.bdgenomics.formats.avro.AlignmentRecord
 object FastQ_PerSequenceQual_Mapper {
   private val OFFSET: Int = 33
 
-  def map(sampleIdentifier:Int, record: AlignmentRecord): Pair[Pair[Int, Int], Int] = {
-    new Pair(new Pair(sampleIdentifier, getMeanValue(record.getQual)), 1)
+  def map(record: AlignmentRecord): Pair[Int, Int] = {
+    new Pair(getMeanValue(record.getQual), 1)
   }
 
   private def getMeanValue(quality: String): Int = {
