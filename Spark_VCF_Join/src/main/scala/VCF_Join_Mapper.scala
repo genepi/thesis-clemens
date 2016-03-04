@@ -1,6 +1,7 @@
 package main.scala
 
-import htsjdk.variant.variantcontext.VariantContext
+import htsjdk.tribble.util.ParsingUtils
+import htsjdk.variant.variantcontext.{Allele, VariantContext}
 import utils.JoinedResult
 
 /**
@@ -14,24 +15,46 @@ object VCF_Join_Mapper {
     (vcfRecord.getContig.toInt, vcfRecord.getStart)
   }
 
-//  def constructResult(key: Pair[Int, Int], value: Pair[VariantContext, Option[VariantContext]]): JoinedResult = {
+  def constructResult(key: Pair[Int, Int], value: Pair[VariantContext, Option[VariantContext]]): JoinedResult = {
+    val leftTuple: VariantContext = value._1
+    val rightTupleOption: Option[VariantContext] = value._2
 
-    //TODO construct result
+    val alleles = ParsingUtils.sortList(leftTuple.getAlleles)
+    val leftAttr = ParsingUtils.sortedString(leftTuple.getAttributes())
 
-//    val leftTuple: VariantContext = value._1
-//    val rightTuple: Option[VariantContext] = value._2
-//
-//    if (rightTuple == None) { //only use left part to construct result
-//      return new JoinedResult(
-//        key._1,
-//        key._2,
-//        ...
-//      )
-//    }
+    if (rightTupleOption == None) { //only use left part to construct result
 
-    // TODO else combine the two resultsets to form the joined result
+      return new JoinedResult(
+        leftTuple.getContig.toInt,
+        leftTuple.getStart,
+        if (leftTuple.hasID) leftTuple.getID else ".",
+
+        alleles.get(0).toString.charAt(0),
+        alleles.get(1).toString.charAt(0),
+        if (leftTuple.hasLog10PError()) leftTuple.getPhredScaledQual().toString else ".",
+
+        leftTuple.getFilters.toString,
+        leftAttr
+      )
+    }
+
+    val rightTuple = rightTupleOption.get
+    val rightAttr = ParsingUtils.sortedString(rightTuple.getAttributes())
+
+    return new JoinedResult(
+      leftTuple.getContig.toInt,
+      leftTuple.getStart,
+      rightTuple.getID,
+
+      alleles.get(0).toString.charAt(0),
+      alleles.get(1).toString.charAt(0),
+      if (leftTuple.hasLog10PError()) leftTuple.getPhredScaledQual().toString else ".",
+
+      leftTuple.getFilters.toString,
+      (leftAttr + rightAttr)
+    )
 
 
-//  }
+  }
 
 }
