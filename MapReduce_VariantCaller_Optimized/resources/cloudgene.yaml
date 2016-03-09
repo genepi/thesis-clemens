@@ -32,10 +32,9 @@ mapred:
   outputs:
 
     - id: outmapred_optimized
-      description: Output Mapreduce
+      description: Output MR Optimized
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false

@@ -72,73 +72,65 @@ mapred:
   outputs:
 
     - id: outmapred_perBaseQual_baseline
-      description: Output Mapreduce
+      description: Output MR BaseQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_perBaseQual_combiner
-      description: Output Mapreduce
+      description: Output MR BaseQual Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_perBaseQual_optimized
-      description: Output Mapreduce
+      description: Output MR BaseQual Optimized
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_perSeqQual_baseline
-      description: Output Mapreduce
+      description: Output MR SeqQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_perSeqQual_combiner
-      description: Output Mapreduce
+      description: Output MR SeqQual Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_perSeqQual_optimized
-      description: Output Mapreduce
+      description: Output MR SeqQual Optimized
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outspark_perBaseQual_baseline
-      description: Output Mapreduce
+      description: Output Spark BaseQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outspark_perSeqQual_baseline
-      description: Output Mapreduce
+      description: Output Spark SeqQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
@@ -148,7 +140,7 @@ mapred:
       type: hdfs-folder
       download: true
       mergeOutput: true
-      temp: true
+      temp: false
       removeHeader: false
 
     - id: tmpadam_2
@@ -156,23 +148,21 @@ mapred:
       type: hdfs-folder
       download: true
       mergeOutput: true
-      temp: true
+      temp: false
       removeHeader: false
 
     - id: outadam_perBaseQual_baseline
-      description: Output Mapreduce
+      description: Output ADAM BaseQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outadam_perSeqQual_baseline
-      description: Output Mapreduce
+      description: Output ADAM SeqQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false

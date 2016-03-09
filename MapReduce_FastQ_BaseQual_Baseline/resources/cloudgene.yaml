@@ -32,10 +32,9 @@ mapred:
   outputs:
 
     - id: outmapred_perBaseQual_baseline
-      description: Output Mapreduce
+      description: Output MR BaseQual Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false

@@ -32,10 +32,9 @@ mapred:
   outputs:
 
     - id: outmapred_combiner
-      description: Output Mapreduce
+      description: Output MR Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false

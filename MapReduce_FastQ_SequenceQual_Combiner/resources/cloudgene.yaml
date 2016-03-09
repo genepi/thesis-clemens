@@ -32,10 +32,9 @@ mapred:
   outputs:
 
     - id: outmapred_perSeqQual_combiner
-      description: Output Mapreduce
+      description: Output MR SeqQual Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false

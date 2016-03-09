@@ -18,10 +18,10 @@ mapred:
 
   steps:
 
-  - name: VariantCaller using Spark (Optimized)
-    spark: Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar
+  - name: VariantCaller using Spark (Baseline)
+    spark: Spark_VariantCaller_Scala_Baseline-1.0-SNAPSHOT.jar
     mainClass: main.scala.NaiveVariantCaller_Job
-    params: $input $outspark
+    params: $input $outspark_baseline
 
   inputs:
 
@@ -32,11 +32,10 @@ mapred:
 
   outputs:
 
-    - id: outspark
-      description: Output Spark
+    - id: outspark_baseline
+      description: Output Spark Baseline
       type: hdfs-folder
       download: true
-      temp: false
       mergeOutput: true
       temp: false
       removeHeader: false

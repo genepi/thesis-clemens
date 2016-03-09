@@ -59,55 +59,49 @@ mapred:
   outputs:
 
     - id: outmapred_baseline
-      description: Output Mapreduce
+      description: Output MR Baseline
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_combiner
-      description: Output Mapreduce
+      description: Output MR Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_optimized
-      description: Output Mapreduce
+      description: Output MR Optimized
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outmapred_optimized_combiner
-      description: Output Mapreduce
+      description: Output MR Optimized Combiner
       type: hdfs-folder
       download: true
-      temp: true
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outspark_baseline
-      description: Output Spark
+      description: Output Spark Baseline
       type: hdfs-folder
       download: true
-      temp: false
       mergeOutput: true
       temp: false
       removeHeader: false
 
     - id: outspark
-      description: Output Spark
+      description: Output Spark Optimized
       type: hdfs-folder
       download: true
-      temp: false
       mergeOutput: true
       temp: false
       removeHeader: false
@@ -117,14 +111,13 @@ mapred:
       type: hdfs-folder
       download: true
       mergeOutput: true
-      temp: true
+      temp: false
       removeHeader: false
 
     - id: outadam
       description: Output ADAM
       type: hdfs-folder
       download: true
-      temp: false
       mergeOutput: true
       temp: false
       removeHeader: false
