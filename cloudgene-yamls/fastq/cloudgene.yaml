@@ -67,7 +67,7 @@ mapred:
      - id: input
        description: Input
        type: text
-       value: eval-clemens/fastq-small
+       value: eval-clemens/1000g-fastq
 
   outputs:
 

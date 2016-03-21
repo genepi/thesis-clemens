@@ -54,7 +54,7 @@ mapred:
      - id: input
        description: Input
        type: text
-       value: eval-clemens/test-input
+       value: eval-clemens/1000g-complete
 
   outputs:
 
