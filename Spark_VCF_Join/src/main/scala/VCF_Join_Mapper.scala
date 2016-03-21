@@ -51,7 +51,8 @@ object VCF_Join_Mapper {
       if (leftTuple.hasLog10PError()) leftTuple.getPhredScaledQual().toString else ".",
 
       leftTuple.getFilters.toString,
-      (leftAttr + rightAttr)
+      leftAttr,
+      rightAttr
     )
 
 
