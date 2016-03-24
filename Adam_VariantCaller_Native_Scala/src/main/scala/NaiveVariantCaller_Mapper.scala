@@ -28,47 +28,22 @@ object NaiveVariantCaller_Mapper {
 
   def flatMap(sampleIdentifier: String, record: AlignmentRecord): TraversableOnce[Pair[Pair[String, Int], Char]] = {
     val resList = new ListBuffer[Pair[Pair[String, Int], Char]]()
+    val sequence: String = record.getSequence
 
-    //TODO replace this code...
-
-
-//    val samRecord: SAMRecord = convertToSAMRecord(record, recordConverter, sfhWritable)
-//    val readBases: Array[Byte] = samRecord.getReadBases()
-//    val sequence: String = new String(readBases, StandardCharsets.UTF_8)
-//
-//    if (NaiveVariantCaller_Filter.readFullfillsRequirements(samRecord)) {
-//      for ( i <- 0 to sequence.length-1) {
-//        if (!samRecord.getBaseQualityString.equals("*") && NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualityString.charAt(i))) {
-//          val outputKey: NaiveVariantCallerKey = new NaiveVariantCallerKey(sampleIdentifier, samRecord.getReferencePositionAtReadPosition(i+1))
-//          sequence.charAt(i) match {
-//            case BASE_A => resList.append(new Pair(outputKey, BASE_A))
-//            case BASE_C => resList.append(new Pair(outputKey, BASE_C))
-//            case BASE_G => resList.append(new Pair(outputKey, BASE_G))
-//            case BASE_T => resList.append(new Pair(outputKey, BASE_T))
-//            case default => println("base character '" + default + "' occurred at position " + outputKey)
-//          }
-//        }
-//      }
-//    }
-
-//    val sequence: String = record.getSequence
-//    for (i <- 0 until sequence.length) {
-//
-//      //TODO
-////      if (!samRecord.getBaseQualityString.equals("*") && NaiveVariantCaller_Filter.baseQualitySufficient(samRecord.getBaseQualityString.charAt(i)))
-//
-//      record.mismatchingPositions
-//
-//
-//      val outputKey: NaiveVariantCallerKey = new NaiveVariantCallerKey(sampleIdentifier, record.getReferencePositionAtReadPosition(i+1))
-//      sequence.charAt(i) match {
-//        case BASE_A => resList.append(new Pair(outputKey, BASE_A))
-//        case BASE_C => resList.append(new Pair(outputKey, BASE_C))
-//        case BASE_G => resList.append(new Pair(outputKey, BASE_G))
-//        case BASE_T => resList.append(new Pair(outputKey, BASE_T))
-//        case default => println("base character '" + default + "' occurred at position " + outputKey)
-//      }
-//    }
+    val limit = sequence.length()-1
+    for(i <- 0 to limit) {
+      if (true) { //todo add filter step
+        resList.append(
+          new Pair(
+            new Pair(
+              sampleIdentifier,
+              record.getMateAlignmentStart.toInt //TODO da ist mir auch nicht klar welcher Wert da genau reingehört
+            ),
+            sequence.charAt(i)
+          )
+        )
+      }
+    }
     resList.toTraversable
   }
 

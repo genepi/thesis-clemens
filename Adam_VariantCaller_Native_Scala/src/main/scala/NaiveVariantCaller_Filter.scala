@@ -19,14 +19,19 @@ object NaiveVariantCaller_Filter {
 
   def readFullfillsRequirements(record: AlignmentRecord): Boolean = {
 
-    //TODO implement filter step on AlignmentRecord Object
+    mappingQualitySufficient(record.getMapq) &&
+    //TODO alignmentQualilty...?
+    record.getReadMapped &&
+    !record.getDuplicateRead
+    //TODO readLength...?
 
+    //Spark Code ...:
 //    mappingQualitySufficient(samRecord.getMappingQuality) &&
 //      alignmentQualitySufficient(samRecord) &&
 //      !samRecord.getReadUnmappedFlag &&
 //      !samRecord.getDuplicateReadFlag &&
 //      samRecord.getReadLength > MIN_READ_LENGTH;
-    true
+
   }
 
   private def mappingQualitySufficient(mapQual: Int): Boolean = {
