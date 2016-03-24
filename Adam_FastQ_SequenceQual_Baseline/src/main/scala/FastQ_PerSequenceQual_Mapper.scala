@@ -1,5 +1,6 @@
 package main.scala
 
+import org.apache.hadoop.io.Text
 import org.bdgenomics.formats.avro.AlignmentRecord
 
 /**
@@ -10,8 +11,12 @@ import org.bdgenomics.formats.avro.AlignmentRecord
 object FastQ_PerSequenceQual_Mapper {
   private val OFFSET: Int = 33
 
-  def map(record: AlignmentRecord): Pair[Int, Int] = {
-    new Pair(getMeanValue(record.getQual), 1)
+  def mapSampleIdentifierWithConvertedInputObject(record: Pair[String, Text]) : Pair[String, AlignmentRecord] = {
+    new Pair(record._1, CustomFastqRecordConverter.convertRead(record))
+  }
+
+  def map(sampleIdentifier: String, record: AlignmentRecord): Pair[Pair[String, Int], Int] = {
+    new Pair(new Pair(sampleIdentifier, getMeanValue(record.getQual)), 1)
   }
 
   private def getMeanValue(quality: String): Int = {
