@@ -14,7 +14,7 @@
         <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>
         <hadoop-bam.version>7.3.1</hadoop-bam.version>
         <parquet.version>1.8.1</parquet.version>
-        <adam.version>0.18.2</adam.version>
+        <adam.version>0.19.0</adam.version>
         <bdg-formats.version>0.6.1</bdg-formats.version>
         <utils.version>0.2.3</utils.version>
         <htsjdk.version>1.139</htsjdk.version>

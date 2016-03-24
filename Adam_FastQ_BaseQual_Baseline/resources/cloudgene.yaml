@@ -21,24 +21,16 @@ mapred:
   - name: FastQ PerBaseQual Baseline using ADAM
     spark: Adam_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
     mainClass: main.scala.FastQ_PerBaseQual_Job
-    params: $input $tmpadam_1 $outadam_perBaseQual_baseline
+    params: $input $outadam_perBaseQual_baseline
 
   inputs:
 
      - id: input
        description: Input
        type: text
-       value: eval-clemens/fastq-small
+       value: eval-clemens/1000g-fastq
 
   outputs:
-
-    - id: tmpadam_1
-      description: Tmp-Output-1 ADAM
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: true
-      removeHeader: false
 
     - id: outadam_perBaseQual_baseline
       description: Output Mapreduce
