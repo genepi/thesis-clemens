@@ -19,6 +19,7 @@ public class FastQ_PerBaseQual_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+        conf.set("mapreduce.reduce.java.opts", "-Xmx6500M");
         Job job = Job.getInstance(conf, "MR_FastQ_PerBaseQual_Baseline");
 
         job.setJarByClass(FastQ_PerBaseQual_Job.class);

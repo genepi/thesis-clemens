@@ -55,12 +55,12 @@ mapred:
   - name: FastQ PerBaseQual Baseline using ADAM
     spark: Adam_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
     mainClass: main.scala.FastQ_PerBaseQual_Job
-    params: $input $tmpadam_1 $outadam_perBaseQual_baseline
+    params: $input $outadam_perBaseQual_baseline
 
   - name: FastQ PerSeqQual Baseline using ADAM
     spark: Adam_FastQ_SequenceQual_Baseline-1.0-SNAPSHOT.jar
     mainClass: main.scala.FastQ_PerSequenceQual_Job
-    params: $input $tmpadam_2 $outadam_perSeqQual_baseline
+    params: $input $outadam_perSeqQual_baseline
 
   inputs:
 
@@ -129,22 +129,6 @@ mapred:
 
     - id: outspark_perSeqQual_baseline
       description: Output Spark SeqQual Baseline
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: false
-      removeHeader: false
-
-    - id: tmpadam_1
-      description: Tmp-Output-1 ADAM
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: false
-      removeHeader: false
-
-    - id: tmpadam_2
-      description: Tmp-Output-2 ADAM
       type: hdfs-folder
       download: true
       mergeOutput: true

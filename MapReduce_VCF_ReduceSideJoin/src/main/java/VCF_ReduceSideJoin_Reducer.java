@@ -1,4 +1,5 @@
 import htsjdk.tribble.util.ParsingUtils;
+import htsjdk.variant.variantcontext.Allele;
 import htsjdk.variant.variantcontext.VariantContext;
 import org.apache.hadoop.io.NullWritable;
 import org.seqdoop.hadoop_bam.VariantContextWritable;
@@ -7,6 +8,7 @@ import util.JoinedResultWritable;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * master-thesis Clemens Banas
@@ -17,40 +19,62 @@ public class VCF_ReduceSideJoin_Reducer extends org.apache.hadoop.mapreduce.Redu
 
     @Override
     protected void reduce(ChromOrderKeyWritable key, Iterable<VariantContextWritable> values, Context context) throws IOException, InterruptedException {
-        Iterator it = values.iterator();
-        VariantContext previousVCFContext = null;
-        VariantContext currentVcfContext;
-
-        if (it.hasNext()) {
-            previousVCFContext = ((VariantContextWritable)it.next()).get();
-        }
+        final Iterator<VariantContextWritable> it = values.iterator();
 
         while (it.hasNext()) {
-            currentVcfContext = ((VariantContextWritable)it.next()).get();
 
-            if (previousVCFContext.getStart() == currentVcfContext.getStart()) { // join match
-                final JoinedResultWritable res = new JoinedResultWritable();
-                res.setChrom(Integer.valueOf(previousVCFContext.getContig()));
-                res.setPos(previousVCFContext.getStart());
+            VariantContext sample = it.next().get();
+            if (0 == context.getCurrentKey().getOrderVal()) {
 
-                if (previousVCFContext.hasID()) {
-                    res.setId(previousVCFContext.getID());
-                } else if (currentVcfContext.hasID()) {
-                    res.setId(currentVcfContext.getID());
+                //TODO vom nächsten Dings checken, ob es einen match gibt und die Info-Spalte rausholen...
+
+                System.out.println("blub");
+
+                //TODO hier scheint es kein "next" zu geben... ??
+                //TODO werden die Werte nicht auf den gleichen Reducer geschickt?
+                //TODO es gibt aber ja nur einen...
+
+
+                if (it.hasNext()) {
+                    VariantContext ref = it.next().get();
+                    System.out.println("sample: " + sample.getStart() + ", ref: " + ref.getStart());
+
+//                    if (ref.getStart() == sample.getStart()) {
+//                        System.out.println("you should join here");
+//                    } else {
+//                        continue;
+//                    }
                 }
 
-                //TODO set the correct values for (ref, alt, qual, filter, attributes)
+                //TODO join is missing at the moment... ;-)
 
-                res.setRef(previousVCFContext.getReference().toString().charAt(0));
-                res.setAlt(previousVCFContext.getAltAlleleWithHighestAlleleCount().toString().charAt(0));
-                res.setQual(0);
-                res.setFilter(previousVCFContext.PASSES_FILTERS.toString());
-                res.setInfo(ParsingUtils.sortedString(currentVcfContext.getAttributes()));
+                JoinedResultWritable res = new JoinedResultWritable();
+                res.setChrom(Integer.valueOf(sample.getContig()));
+                res.setPos(sample.getStart());
+                res.setId((sample.hasID() ? sample.getID() : "."));
+
+                final List<Allele> alleles = ParsingUtils.sortList(sample.getAlleles());
+                res.setAlt(alleles.get(0).toString().charAt(0));
+                res.setRef(alleles.get(1).toString().charAt(0));
+                res.setQual(sample.hasLog10PError() ? String.valueOf(sample.getPhredScaledQual()) : ".");
+
+                res.setFilter(sample.PASSES_FILTERS.toString());
+                res.setId(ParsingUtils.sortedString(sample.getAttributes()));
 
                 context.write(null, res);
             }
-            previousVCFContext = currentVcfContext;
+
         }
+
+
+
+
+
+        //TODO @Secondary Sorting
+        //brauche ich den NaturalKeyGroupingComparator überhaupt. Wenn ich ihn habe, dann ist im Reducer nur 1x
+        //der Wert, selbst wenn ich ihn in beiden input-Files drin habe...
+
+
     }
 
 }

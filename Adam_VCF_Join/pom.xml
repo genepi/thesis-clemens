@@ -104,8 +104,14 @@
     </dependencies>
 
     <build>
-        <plugins>
+      <resources>
+            <resource>
+                <directory>resources</directory>
+                <targetPath>..</targetPath>
+            </resource>
+        </resources>
 
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

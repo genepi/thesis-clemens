@@ -17,14 +17,14 @@ public class JoinedResultWritable implements Writable {
     private String id;
     private char ref;
     private char alt;
-    private int qual;
+    private String qual;
     private String filter;
     private String info;
 
     public JoinedResultWritable() {
     }
 
-    public JoinedResultWritable(int chrom, int pos, String id, char ref, char alt, int qual, String filter, String info) {
+    public JoinedResultWritable(int chrom, int pos, String id, char ref, char alt, String qual, String filter, String info) {
         this.chrom = chrom;
         this.pos = pos;
         this.id = id;
@@ -46,8 +46,8 @@ public class JoinedResultWritable implements Writable {
         if (pos != that.pos) return false;
         if (ref != that.ref) return false;
         if (alt != that.alt) return false;
-        if (qual != that.qual) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (qual != null ? !qual.equals(that.qual) : that.qual != null) return false;
         if (filter != null ? !filter.equals(that.filter) : that.filter != null) return false;
         return info != null ? info.equals(that.info) : that.info == null;
 
@@ -60,7 +60,7 @@ public class JoinedResultWritable implements Writable {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (int) ref;
         result = 31 * result + (int) alt;
-        result = 31 * result + qual;
+        result = 31 * result + (qual != null ? qual.hashCode() : 0);
         result = 31 * result + (filter != null ? filter.hashCode() : 0);
         result = 31 * result + (info != null ? info.hashCode() : 0);
         return result;
@@ -72,7 +72,7 @@ public class JoinedResultWritable implements Writable {
         out.writeUTF(id);
         out.writeChar(ref);
         out.writeChar(alt);
-        out.writeInt(qual);
+        out.writeUTF(qual);
         out.writeUTF(filter);
         out.writeUTF(info);
     }
@@ -83,7 +83,7 @@ public class JoinedResultWritable implements Writable {
         id = in.readUTF();
         ref = in.readChar();
         alt = in.readChar();
-        qual = in.readInt();
+        qual = in.readUTF();
         filter = in.readUTF();
         info = in.readUTF();
     }
@@ -128,11 +128,11 @@ public class JoinedResultWritable implements Writable {
         this.alt = alt;
     }
 
-    public int getQual() {
+    public String getQual() {
         return qual;
     }
 
-    public void setQual(int qual) {
+    public void setQual(String qual) {
         this.qual = qual;
     }
 

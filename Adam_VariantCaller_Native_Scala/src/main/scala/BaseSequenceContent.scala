@@ -1,11 +1,9 @@
 package main.scala
 
-import scala.collection.mutable.Map
-
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 29.01.16.
   */
 class BaseSequenceContent(base: Char) {
   private val BASE_A: Char = 'A'
@@ -17,8 +15,6 @@ class BaseSequenceContent(base: Char) {
   private var noOfBaseC: Int = 0
   private var noOfBaseG: Int = 0
   private var noOfBaseT: Int = 0
-
-  private var mostDominantBase: Char = ' '
 
   def incrementBaseCount(base: Char): BaseSequenceContent = {
     base match {
@@ -66,33 +62,4 @@ class BaseSequenceContent(base: Char) {
     return noOfBaseT
   }
 
-  def setMostDominantBase(mostDominantBase: Char) {
-    this.mostDominantBase = mostDominantBase
-  }
-
-  def getMostDominantBase() : Char = {
-    this.mostDominantBase
-  }
-
-  def getPercentageOfBaseOccurrences(): Map[Character, Double] = {
-    val result: Map[Character,Double] = Map[Character,Double]()
-    val totalNoOfBases: Int = noOfBaseA + noOfBaseC + noOfBaseG + noOfBaseT
-    val percentageValueBaseA: Double = calculatePercentageValue(noOfBaseA, totalNoOfBases)
-    val percentageValueBaseC: Double = calculatePercentageValue(noOfBaseC, totalNoOfBases)
-    val percentageValueBaseG: Double = calculatePercentageValue(noOfBaseG, totalNoOfBases)
-    val percentageValueBaseT: Double = calculatePercentageValue(noOfBaseT, totalNoOfBases)
-
-    result(BASE_A) = percentageValueBaseA
-    result(BASE_C) = percentageValueBaseC
-    result(BASE_G) = percentageValueBaseG
-    result(BASE_T) = percentageValueBaseT
-
-    result
-  }
-
-  private def calculatePercentageValue(baseOccurrence: Int, totalNoOfBases: Int): Double = {
-    return (baseOccurrence * 100).toDouble / totalNoOfBases.toDouble
-  }
-
-  override def toString: String = String.valueOf(mostDominantBase)
 }

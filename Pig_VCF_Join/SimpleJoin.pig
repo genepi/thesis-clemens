@@ -10,13 +10,12 @@
 REGISTER PigGene-1.0.jar;
 
 leftRel = LOAD '$inputBig' USING PigStorage('\t') AS (chrom:chararray, pos:long, id:chararray, ref:chararray, alt:chararray, qual:double, filt:chararray, info:chararray);
-
 rightRel = LOAD '$inputBig' USING PigStorage('\t') AS (REFchrom:chararray, REFpos:long, REFid:chararray, REFref:chararray, REFalt:chararray, REFqual:double, REFfilt:chararray, REFinfo:chararray);
 
--- TODO implement the join btw. the 2 relations
-
+joinedRel = JOIN leftRel BY (chrom, pos) LEFT OUTER, rightRel BY (REFchrom, REFpos);
+projectedRel = FOREACH joinedRel GENERATE leftRel.*, REFinfo;
 
 header = FILTER leftRel BY pigGene.UDFs.ExtractHeader(chrom);
-DUMP header;
+res = UNION header, joinedRel;
 
-STORE header INTO '$output';
+STORE res INTO '$output';

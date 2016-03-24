@@ -15,11 +15,11 @@ public class VCF_ReduceSideJoin_Mapper extends org.apache.hadoop.mapreduce.Mappe
 
     @Override
     protected void map(LongWritable key, VariantContextWritable value, Context context) throws IOException, InterruptedException {
-
-        //TODO dont use magic-values -> put value into setupMethod
-
         final String sampleIdentifier = ((FileSplit)context.getInputSplit()).getPath().getName();
-        int orderVal = (sampleIdentifier == "20mini.vcf") ? 0 : 1;
+        int orderVal = (sampleIdentifier.equals(context.getConfiguration().get("leftRelation"))) ? 0 : 1;
+
+        System.out.println(context.getConfiguration().get("leftRelation"));
+
 
         VariantContext variantContext = value.get();
         context.write(new ChromOrderKeyWritable(Integer.valueOf(variantContext.getContig()), variantContext.getStart(), orderVal), value);
