@@ -1,9 +1,10 @@
 package pigGene.UDFs;
 
-import java.io.IOException;
-
 import org.apache.pig.FilterFunc;
+import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
+
+import java.io.IOException;
 
 /**
  * UDF to remove unwanted header information in the pig relation to speed up
@@ -19,7 +20,7 @@ public class IgnoreHeader extends FilterFunc {
 		if (input == null || input.size() == 0) {
 			return false;
 		}
-		final String value = (String) input.get(0);
+		final String value = ((DataByteArray) input.get(0)).toString();
 		final String headerSymbol = "#";
 		return !(value.substring(0, 1).equals(headerSymbol));
 	}
