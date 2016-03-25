@@ -10,6 +10,7 @@ import org.apache.parquet.hadoop.util.ContextUtil
 import org.apache.spark.rdd.{NewHadoopRDD, RDD}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.bdgenomics.adam.models.{RecordGroupDictionary, SequenceDictionary}
+import org.bdgenomics.adam.rich.RichAlignmentRecord
 import org.bdgenomics.formats.avro.{AlignmentRecord, RecordGroupMetadata}
 import org.bdgenomics.utils.misc.HadoopUtil
 import org.seqdoop.hadoop_bam.util.SAMHeaderReader
@@ -107,7 +108,8 @@ object NaiveVariantCaller_Job {
     val adamRDD: RDD[Pair[String, AlignmentRecord]] = myRdd.map( record => NaiveVariantCaller_Mapper.mapSampleIdentifierWithConvertedInputObject(record, seqDict, readGroups) )
 
     val preFilter: RDD[Pair[String,AlignmentRecord]] = adamRDD.filter( record => NaiveVariantCaller_Filter.readFullfillsRequirements(record._2) )
-    val baseCount: RDD[Pair[Pair[String, Int], Char]] = preFilter.flatMap( record => NaiveVariantCaller_Mapper.flatMap(record._1, record._2) )
+    val richRecordMap: RDD[Pair[String,RichAlignmentRecord]] = preFilter.map( record => NaiveVariantCaller_Mapper.convertAlignmentRecordToRichAlignmentRecord(record._1, record._2) )
+    val baseCount: RDD[Pair[Pair[String, Int], Char]] = richRecordMap.flatMap( record => NaiveVariantCaller_Mapper.flatMap(record._1, record._2) )
 
     //reduce step
     val baseSequenceContent: RDD[Pair[Pair[String, Int], BaseSequenceContent]] = baseCount.combineByKey(

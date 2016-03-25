@@ -1,5 +1,4 @@
 package main.scala
-import htsjdk.samtools.SAMRecord
 import org.bdgenomics.formats.avro.AlignmentRecord
 
 /**

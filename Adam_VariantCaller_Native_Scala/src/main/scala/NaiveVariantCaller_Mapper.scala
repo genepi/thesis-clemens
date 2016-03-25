@@ -26,16 +26,19 @@ object NaiveVariantCaller_Mapper {
     new Pair(record._1, samRecordConverter.convert(record._2.get(), seqDict, readGroups))
   }
 
-  def flatMap(sampleIdentifier: String, record: AlignmentRecord): TraversableOnce[Pair[Pair[String, Int], Char]] = {
+  def convertAlignmentRecordToRichAlignmentRecord(sampleIdentifier: String, record: AlignmentRecord): Pair[String, RichAlignmentRecord] = {
+    new Pair(sampleIdentifier, RichAlignmentRecord.apply(record))
+  }
+
+  def flatMap(sampleIdentifier: String, record: RichAlignmentRecord): TraversableOnce[Pair[Pair[String, Int], Char]] = {
     val resList = new ListBuffer[Pair[Pair[String, Int], Char]]()
     val sequence: String = record.getSequence
 
     val limit = sequence.length()-1
     for(i <- 0 to limit) {
-      val richRecord: RichAlignmentRecord = RichAlignmentRecord.apply(record)
-      if (NaiveVariantCaller_Filter.baseQualitySufficient(richRecord.qualityScores(i))) {
-        if (richRecord.readOffsetToReferencePosition(i) != None) {
-          val refPos = richRecord.readOffsetToReferencePosition(i).get.pos.toInt
+      if (NaiveVariantCaller_Filter.baseQualitySufficient(record.qualityScores(i))) {
+        if (record.readOffsetToReferencePosition(i) != None) {
+          val refPos = record.readOffsetToReferencePosition(i).get.pos.toInt
           resList.append(
             new Pair(
               new Pair(
