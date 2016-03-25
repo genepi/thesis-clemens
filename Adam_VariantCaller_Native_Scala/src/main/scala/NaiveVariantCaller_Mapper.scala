@@ -1,8 +1,8 @@
 package main.scala
 
-import org.apache.hadoop.io.Text
 import org.bdgenomics.adam.converters.SAMRecordConverter
 import org.bdgenomics.adam.models.{RecordGroupDictionary, SequenceDictionary}
+import org.bdgenomics.adam.rich.RichAlignmentRecord
 import org.bdgenomics.formats.avro.AlignmentRecord
 import org.seqdoop.hadoop_bam.SAMRecordWritable
 
@@ -32,16 +32,20 @@ object NaiveVariantCaller_Mapper {
 
     val limit = sequence.length()-1
     for(i <- 0 to limit) {
-      if (true) { //todo add filter step
-        resList.append(
-          new Pair(
+      val richRecord: RichAlignmentRecord = RichAlignmentRecord.apply(record)
+      if (NaiveVariantCaller_Filter.baseQualitySufficient(richRecord.qualityScores(i))) {
+        if (richRecord.readOffsetToReferencePosition(i) != None) {
+          val refPos = richRecord.readOffsetToReferencePosition(i).get.pos.toInt
+          resList.append(
             new Pair(
-              sampleIdentifier,
-              record.getMateAlignmentStart.toInt //TODO da ist mir auch nicht klar welcher Wert da genau reingehört
-            ),
-            sequence.charAt(i)
+              new Pair(
+                sampleIdentifier,
+                refPos
+              ),
+              sequence.charAt(i)
+            )
           )
-        )
+        }
       }
     }
     resList.toTraversable
