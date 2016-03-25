@@ -35,8 +35,8 @@ object VCF_Join_Mapper {
 
         leftTuple.getFilters.toString,
         leftAttr,
-        null,
-        leftTuple.getGenotypes
+        leftTuple.getGenotypes,
+        null
       )
     }
 
@@ -54,8 +54,8 @@ object VCF_Join_Mapper {
 
       leftTuple.getFilters.toString,
       leftAttr,
-      rightAttr,
-      leftTuple.getGenotypes
+      leftTuple.getGenotypes,
+      rightAttr
     )
 
 

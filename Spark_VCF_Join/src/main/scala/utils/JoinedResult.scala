@@ -7,7 +7,7 @@ import htsjdk.variant.variantcontext.GenotypesContext
   * Organization: DBIS - University of Innsbruck
   * Created 19.02.16.
   */
-class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual: String, filter: String, info: String, infoRef: String = null, genotypes: GenotypesContext) {
+class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual: String, filter: String, info: String, genotypes: GenotypesContext, infoRef: String = null) {
   private val delimiter = "\t"
 
   override def toString: String = {
@@ -27,12 +27,12 @@ class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual:
       .append(filter)
       .append(delimiter)
       .append(info)
-      if (info != null) {
+      .append(delimiter)
+      .append(genotypes)
+      if (infoRef != null) {
         sb.append(delimiter)
         sb.append(infoRef)
       }
-      .append(delimiter)
-      .append(genotypes)
     sb.toString()
   }
 
