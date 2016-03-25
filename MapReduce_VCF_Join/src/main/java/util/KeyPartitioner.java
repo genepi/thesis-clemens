@@ -14,9 +14,8 @@ public class KeyPartitioner extends Partitioner<ChromPosKey, DoubleWritable> {
 
     @Override
     public int getPartition(ChromPosKey chromPosKey, DoubleWritable val, int numPartitions) {
-        int result = chromPosKey.getChromosome();
-        result = 31 * result + chromPosKey.getPosition();
-        return result % numPartitions;
+        int hash = chromPosKey.getChromosome();
+        return hash % numPartitions;
     }
 
 }

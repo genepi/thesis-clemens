@@ -22,9 +22,6 @@ public class NaturalKeyGroupingComparator extends WritableComparator {
         ChromPosKey k2 = (ChromPosKey) w2;
 
         int result = (k1.getChromosome() < k2.getChromosome() ? -1 : (k1.getChromosome() == k2.getChromosome() ? 0 : 1));
-        if (0 == result) {
-            result = (k1.getPosition() < k2.getPosition() ? -1 : (k1.getPosition() == k2.getPosition() ? 0 : 1));
-        }
         return result;
     }
 
