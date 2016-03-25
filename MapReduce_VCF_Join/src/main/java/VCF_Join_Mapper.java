@@ -16,7 +16,7 @@ public class VCF_Join_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWrit
     @Override
     protected void map(LongWritable key, VariantContextWritable value, Context context) throws IOException, InterruptedException {
         final String sampleIdentifier = ((FileSplit)context.getInputSplit()).getPath().getName();
-        int orderValue = (sampleIdentifier.equals(context.getConfiguration().get("sample"))) ? 0 : 1;
+        int orderValue = (sampleIdentifier.equals(context.getConfiguration().get("reference"))) ? 0 : 1;
 
         final VariantContext variantContext = value.get();
         int chrom = Integer.valueOf(variantContext.getContig());

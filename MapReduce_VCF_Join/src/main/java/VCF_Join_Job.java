@@ -1,16 +1,12 @@
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.VCFInputFormat;
 import org.seqdoop.hadoop_bam.VariantContextWritable;
-import util.ChromPosKey;
-import util.CompositeKeyComparator;
-import util.KeyPartitioner;
-import util.NaturalKeyGroupingComparator;
+import util.*;
 
 /**
  * master-thesis Clemens Banas
@@ -26,7 +22,7 @@ public class VCF_Join_Job {
         }
 
         Configuration conf = new Configuration();
-        conf.set("sample", args[0].substring(args[0].lastIndexOf('/')+1));
+        conf.set("reference", args[1].substring(args[1].lastIndexOf('/')+1));
         Job job = Job.getInstance(conf, "MR_VCF_ReduceSideJoin");
 
         job.setJarByClass(VCF_Join_Job.class);
@@ -43,7 +39,7 @@ public class VCF_Join_Job {
         job.setMapOutputValueClass(VariantContextWritable.class);
 
         job.setOutputKeyClass(NullWritable.class);
-        job.setOutputValueClass(Text.class); //TODO change the type..!
+        job.setOutputValueClass(JoinedResultWritable.class);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileInputFormat.addInputPath(job, new Path(args[1]));
