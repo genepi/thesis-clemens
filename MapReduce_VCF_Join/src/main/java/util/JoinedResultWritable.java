@@ -40,86 +40,6 @@ public class JoinedResultWritable implements Writable {
         this.infoRef = infoRef;
     }
 
-    public int getChrom() {
-        return chrom;
-    }
-
-    public void setChrom(int chrom) {
-        this.chrom = chrom;
-    }
-
-    public int getPos() {
-        return pos;
-    }
-
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public char getRef() {
-        return ref;
-    }
-
-    public void setRef(char ref) {
-        this.ref = ref;
-    }
-
-    public char getAlt() {
-        return alt;
-    }
-
-    public void setAlt(char alt) {
-        this.alt = alt;
-    }
-
-    public String getQual() {
-        return qual;
-    }
-
-    public void setQual(String qual) {
-        this.qual = qual;
-    }
-
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public String getGenotypes() {
-        return genotypes;
-    }
-
-    public void setGenotypes(String genotypes) {
-        this.genotypes = genotypes;
-    }
-
-    public String getInfoRef() {
-        return infoRef;
-    }
-
-    public void setInfoRef(String infoRef) {
-        this.infoRef = infoRef;
-    }
-
     public void write(DataOutput out) throws IOException {
         out.writeInt(chrom);
         out.writeInt(pos);
@@ -166,11 +86,10 @@ public class JoinedResultWritable implements Writable {
         sb.append(delimiter);
         sb.append(info);
         sb.append(delimiter);
+        sb.append(infoRef);
+        sb.append(delimiter);
         sb.append(genotypes);
-        if (infoRef != null) {
-            sb.append(delimiter);
-            sb.append(infoRef);
-        }
+        sb.append(delimiter);
         return sb.toString();
     }
 
