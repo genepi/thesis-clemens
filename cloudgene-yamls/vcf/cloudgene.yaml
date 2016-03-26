@@ -1,0 +1,85 @@
+name: Clemens Thesis VCF Join complete
+description:
+version: beta
+website: http://genepi.i-med.ac.at
+category:
+
+cluster:
+
+  image: us-east-1/ami-7341831a
+  type: m1.large
+  ports: 80,50030,50070
+  user: ec2-user
+  creationOnly: false
+  installMapred: true
+  service: hadoop
+
+mapred:
+
+  steps:
+
+  - name: VCF Join using MapReduce
+    jar: Mapreduce_VCF_Join-1.0-SNAPSHOT.jar
+    params: $input_sample $input_reference $outmapred
+
+#  - name: VCF Join using PIG
+#    pig: ...
+#    params: $input_sample $input_reference $outpig
+
+  - name: VCF Join using Spark
+    spark: Spark_VCF_Join-1.0-SNAPSHOT.jar
+    mainClass: main.scala.VCF_Join_Job
+    params: $input_sample $input_reference $outspark
+
+  - name: VCF Join using ADAM
+    spark: ...
+    mainClass: ...
+    params: $input_sample $input_reference $outadam
+
+
+  inputs:
+
+     - id: input_sample
+       description: Input
+       type: text
+       value: eval-clemens/????
+
+    - id: input_reference
+      description: Input
+      type: text
+      value: eval-clemens/????
+
+
+  outputs:
+
+    - id: outmapred
+      description: Output MapReduce
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outpig
+      description: Output MapReduce
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outspark
+      description: Output MapReduce
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: outadam
+      description: Output MapReduce
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
