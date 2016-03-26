@@ -29,7 +29,7 @@ object VCF_Join_Job {
     val sc = new SparkContext(conf)
 
 
-    // load the small VCF dataset into an RDD
+    // load the small VCF dataset into a RDD
     val configurationVcfInputSmall = new Configuration()
     configurationVcfInputSmall.set("mapreduce.input.fileinputformat.inputdir", vcfSmallInput)
 

@@ -1,5 +1,6 @@
 import htsjdk.tribble.util.ParsingUtils;
 import htsjdk.variant.variantcontext.Allele;
+import htsjdk.variant.variantcontext.Genotype;
 import htsjdk.variant.variantcontext.GenotypesContext;
 import htsjdk.variant.variantcontext.VariantContext;
 import org.apache.hadoop.io.NullWritable;
@@ -85,10 +86,14 @@ public class VCF_Join_Reducer extends org.apache.hadoop.mapreduce.Reducer<ChromP
     }
 
     private String genotypesToString(GenotypesContext genotypes) {
-
-        //TODO handle genotype information
-
         return "genotypes ...";
+//        StringBuilder sb = new StringBuilder();
+//        char delimiter = ' ';
+//        for (Genotype genotype : genotypes) {
+//            sb.append(genotype.getGenotypeString());
+//            sb.append(delimiter);
+//        }
+//        return sb.toString();
     }
 
 }
