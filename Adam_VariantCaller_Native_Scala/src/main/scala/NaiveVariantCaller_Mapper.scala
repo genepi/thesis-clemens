@@ -38,7 +38,7 @@ object NaiveVariantCaller_Mapper {
     for(i <- 0 to limit) {
       if (NaiveVariantCaller_Filter.baseQualitySufficient(record.qualityScores(i))) {
         if (record.readOffsetToReferencePosition(i) != None) {
-          val refPos = record.readOffsetToReferencePosition(i).get.pos.toInt
+          val refPos = record.readOffsetToReferencePosition(i).get.pos.toInt + 1
           resList.append(
             new Pair(
               new Pair(
