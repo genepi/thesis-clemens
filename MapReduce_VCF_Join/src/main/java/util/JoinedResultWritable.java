@@ -85,7 +85,11 @@ public class JoinedResultWritable implements Writable {
         sb.append(filter);
         sb.append(delimiter);
         sb.append(info);
-        sb.append(delimiter);
+        if (infoRef.equals(" ")) {
+            sb.append(delimiter);
+        } else {
+            sb.append(';');
+        }
         sb.append(infoRef);
         sb.append(delimiter);
         sb.append(genotypes);

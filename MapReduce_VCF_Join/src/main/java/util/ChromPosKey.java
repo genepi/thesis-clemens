@@ -15,9 +15,9 @@ public class ChromPosKey implements WritableComparable<ChromPosKey> {
 
     //natural key part
     private int chromosome;
-    private int position;
 
-    //secondary sort operates on this value
+    //secondary sort operates on this values
+    private int position;
     private int orderValue;
 
     public ChromPosKey() {

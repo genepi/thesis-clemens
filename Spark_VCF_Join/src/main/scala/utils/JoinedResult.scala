@@ -27,11 +27,15 @@ class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual:
       .append(filter)
       .append(delimiter)
       .append(info)
-      .append(delimiter)
-      .append(infoRef)
+    if (infoRef.equals(" ")) {
+      sb.append(delimiter)
+    } else {
+      sb.append(';')
+    }
+    sb.append(infoRef)
       .append(delimiter)
       .append(genotypes)
-    sb.toString()
+      .toString()
   }
 
 }

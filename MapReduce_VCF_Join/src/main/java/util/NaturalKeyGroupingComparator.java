@@ -8,7 +8,7 @@ import org.apache.hadoop.io.WritableComparator;
  * Organization: DBIS - University of Innsbruck
  * Created 25.03.16.
  *
- * Groups values based on the natural key (chrom,pos)
+ * Groups values based on the natural key (chrom)
  */
 public class NaturalKeyGroupingComparator extends WritableComparator {
 
