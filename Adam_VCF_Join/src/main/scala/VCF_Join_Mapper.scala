@@ -1,6 +1,7 @@
 package main.scala
 
-import org.bdgenomics.formats.avro.AlignmentRecord
+import org.bdgenomics.adam.models.VariantContext
+import org.bdgenomics.adam.rich.RichVariant
 
 /**
   * master-thesis Clemens Banas
@@ -9,12 +10,13 @@ import org.bdgenomics.formats.avro.AlignmentRecord
   */
 object VCF_Join_Mapper {
 
-  def mapKeyBy(record: AlignmentRecord): Pair[Int, Int] = {
+  def mapKeyBy(variant: RichVariant): Pair[Int, Int] = {
 
     //TODO is the chrom encoded as string in AlignmentRecord
     //TODO can it simply be casted to int??
 
-    (record.getContig.getContigName, record.getStart.toInt)
+    (variant.getContig.getContigName.toInt, variant.getStart.toInt)
+
   }
 
 }
