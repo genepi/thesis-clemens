@@ -13,7 +13,7 @@ import utils.QualityCountHelperWritable;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 04.02.16.
+ * Created 21.04.2016
  */
 public class FastQ_PerBaseQual_Job {
 

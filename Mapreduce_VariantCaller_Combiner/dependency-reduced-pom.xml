@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.ac.uibk.mapreduce-variantcaller-combiner.thesis.banas</groupId>
   <artifactId>Mapreduce_VariantCaller_Combiner</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <build>
     <resources>
       <resource>

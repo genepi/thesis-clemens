@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF to filter lines above a specified threshold.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class FilterLines extends FilterFunc {
 	private final static int noOfLines = 15;

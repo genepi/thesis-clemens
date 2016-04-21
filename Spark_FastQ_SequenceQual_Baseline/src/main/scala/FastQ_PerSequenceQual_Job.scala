@@ -10,13 +10,13 @@ import org.seqdoop.hadoop_bam.{FastqInputFormat, SequencedFragment}
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 04.02.16.
+  * Created 21.04.2016
   */
 object FastQ_PerSequenceQual_Job {
 
   def main(args: Array[String]): Unit = {
     if (args.length != 2) {
-      println("usage: spark-submit Spark_FastQ_SequenceQual_Baseline-1.0-SNAPSHOT.jar <fastQ input file> <output dir>")
+      println("usage: spark-submit Spark_FastQ_SequenceQual_Baseline-1.0.jar <fastQ input file> <output dir>")
       return;
     }
 

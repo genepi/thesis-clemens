@@ -9,7 +9,6 @@ import java.io.IOException;
  * UDF to extract header information in the pig relation.
  * 
  * @author: Clemens Banas
- * @date: February 2016
  */
 public class ExtractHeader extends FilterFunc {
 

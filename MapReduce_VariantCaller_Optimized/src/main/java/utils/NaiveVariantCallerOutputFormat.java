@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 29.10.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCallerOutputFormat<K,V> extends TextOutputFormat {
     private static final String KEY_VALUE_SEPARATOR = ",";

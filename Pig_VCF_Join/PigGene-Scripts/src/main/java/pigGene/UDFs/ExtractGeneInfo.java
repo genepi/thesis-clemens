@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF to extract the geneinfo.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class ExtractGeneInfo extends EvalFunc<String> {
 	private final String geneinfo = "GENEINFO=";

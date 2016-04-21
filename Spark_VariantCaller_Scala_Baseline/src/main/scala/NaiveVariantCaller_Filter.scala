@@ -7,7 +7,7 @@ import scala.collection.mutable.Map
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Filter {
   private val BASE_A: Char = 'A'

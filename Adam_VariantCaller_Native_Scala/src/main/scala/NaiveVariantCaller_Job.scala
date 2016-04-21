@@ -1,111 +1,71 @@
 package main.scala
 
-import java.io.FileNotFoundException
-
-import htsjdk.samtools.SAMFileHeader
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.hadoop.io.LongWritable
-import org.apache.parquet.hadoop.util.ContextUtil
-import org.apache.spark.rdd.{NewHadoopRDD, RDD}
+import genepi.hadoop.HdfsUtil
+import org.apache.hadoop.fs.Path
+import org.apache.parquet.hadoop.metadata.CompressionCodecName
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
-import org.bdgenomics.adam.models.{RecordGroupDictionary, SequenceDictionary}
+import org.bdgenomics.adam.rdd.ADAMContext._
+import org.bdgenomics.adam.rdd.ADAMSaveAnyArgs
+import org.bdgenomics.adam.rdd.read.AlignmentRecordRDD
 import org.bdgenomics.adam.rich.RichAlignmentRecord
-import org.bdgenomics.formats.avro.{AlignmentRecord, RecordGroupMetadata}
-import org.bdgenomics.utils.misc.HadoopUtil
-import org.seqdoop.hadoop_bam.util.SAMHeaderReader
-import org.seqdoop.hadoop_bam.{AnySAMInputFormat, FileVirtualSplit, SAMRecordWritable}
+import org.bdgenomics.formats.avro.AlignmentRecord
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of InnsbruckØ
-  * Created 05.02.16.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Job {
 
-  private def adamBamDictionaryLoad(samHeader: SAMFileHeader): SequenceDictionary = {
-    SequenceDictionary(samHeader)
-  }
-
-  private def adamBamLoadReadGroups(samHeader: SAMFileHeader): RecordGroupDictionary = {
-    RecordGroupDictionary.fromSAMHeader(samHeader)
-  }
-
   def main(args: Array[String]): Unit = {
-    if (args.length != 2) {
-      println("usage: spark-submit Adam_VariantCaller_Native_Scala-1.0-SNAPSHOT.jar <bam input directory> <output dir>")
+    if (args.length != 3) {
+      println("usage: spark-submit Adam_VariantCaller_Native_Scala-1.0.jar <bam input directory> <tmp parquet output directory> <output dir>")
       return;
     }
 
-    val input = args(0)
-    val output = args(1)
+    System.setProperty("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    System.setProperty("spark.kryo.registrator", "org.bdgenomics.adam.serialization.ADAMKryoRegistrator")
+    System.setProperty("spark.kryoserializer.buffer.mb", "4")
+    System.setProperty("spark.kryo.referenceTracking", "true")
 
     val conf = new SparkConf()
     conf.setAppName("Adam_VariantCaller_Native_Scala")
-    conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
-    conf.set("spark.kryo.registrator","org.bdgenomics.adam.serialization.ADAMKryoRegistrator")
-    conf.registerKryoClasses(Array(classOf[BaseSequenceContent], classOf[RecordGroupMetadata]))
     val sc = new SparkContext(conf)
 
-    val configuration = new Configuration()
-    configuration.set("mapreduce.input.fileinputformat.inputdir", input)
+    val input = args(0)
+    val tmpFolder = args(1)
+    val output = args(2)
 
+    //conversion from bam-files containing folder into adam parquet format
+    val startTime = System.nanoTime()
 
-    //copied from ADAM code ...
-
-    val path = new Path(input)
-    val fs =
-      Option(
-        FileSystem.get(path.toUri, sc.hadoopConfiguration)
-      ).getOrElse(
-        throw new FileNotFoundException(
-          s"Couldn't find filesystem for ${path.toUri} with Hadoop configuration ${sc.hadoopConfiguration}"
-        )
-      )
-
-    val bamFiles =
-      Option(
-        if (fs.isDirectory(path)) fs.listStatus(path) else fs.globStatus(path)
-      ).getOrElse(
-        throw new FileNotFoundException(
-          s"Couldn't find any files matching ${path.toUri}"
-        )
-      )
-
-    val (seqDict, readGroups) =
-      bamFiles
-        .map(fs => fs.getPath)
-        .flatMap(fp => {
-          try {
-            val samHeader = SAMHeaderReader.readSAMHeaderFrom(fp, sc.hadoopConfiguration)
-            val sd = adamBamDictionaryLoad(samHeader)
-            val rg = adamBamLoadReadGroups(samHeader)
-            Some((sd, rg))
-          } catch {
-            case e: Throwable => {
-              None
-            }
-          }
-        }).reduce((kv1, kv2) => {
-        (kv1._1 ++ kv2._1, kv1._2 ++ kv2._2)
-      })
-
-    val job = HadoopUtil.newJob(sc)
-    val bamInput = sc.newAPIHadoopFile(
-      input,
-      classOf[AnySAMInputFormat],
-      classOf[LongWritable],
-      classOf[SAMRecordWritable],
-      ContextUtil.getConfiguration(job)
-    )
-
-    val hadoopRdd = bamInput.asInstanceOf[NewHadoopRDD[Void,SAMRecordWritable]]
-    val myRdd: RDD[Pair[String, SAMRecordWritable]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
-      val file = inputSplit.asInstanceOf[FileVirtualSplit]
-      iterator.map(record => (file.getPath.getName, record._2))
+    val filePaths = new ListBuffer[Path]
+    val hdfsFilePaths: List[String] = HdfsUtil.getFiles(input)
+    hdfsFilePaths.foreach( filePath => filePaths += new Path(filePath) )
+    if (filePaths.size == 0) {
+      throw new IllegalArgumentException("input folder is empty")
     }
 
-    val adamRDD: RDD[Pair[String, AlignmentRecord]] = myRdd.map( record => NaiveVariantCaller_Mapper.mapSampleIdentifierWithConvertedInputObject(record, seqDict, readGroups) )
+    val adamAlignments: AlignmentRecordRDD = sc.loadAlignmentsFromPaths(filePaths)
+    val adamArgs = new ADAMSaveAnyArgs {
+      override var sortFastqOutput: Boolean = false
+      override var asSingleFile: Boolean = true
+      override var outputPath: String = tmpFolder
+      override var disableDictionaryEncoding: Boolean = false
+      override var blockSize: Int = 128 * 1024 * 1024
+      override var pageSize: Int = 1 * 1024 * 1024
+      override var compressionCodec: CompressionCodecName = CompressionCodecName.GZIP
+    }
+    adamAlignments.map(r => r).saveAsParquet(adamArgs, adamAlignments.sequences, adamAlignments.recordGroups)
+    val timeDiff = System.nanoTime() - startTime;
+    System.out.println("time needed to perform conversion to adam: " + timeDiff);
+
+    //processing of parquet file
+    val inputRdd: AlignmentRecordRDD = sc.loadAlignments(tmpFolder)
+    val adamRDD: RDD[Pair[String, AlignmentRecord]] = inputRdd.keyBy( record => record.getRecordGroupSample )
 
     val preFilter: RDD[Pair[String,AlignmentRecord]] = adamRDD.filter( record => NaiveVariantCaller_Filter.readFullfillsRequirements(record._2) )
     val richRecordMap: RDD[Pair[String,RichAlignmentRecord]] = preFilter.map( record => NaiveVariantCaller_Mapper.convertAlignmentRecordToRichAlignmentRecord(record._1, record._2) )

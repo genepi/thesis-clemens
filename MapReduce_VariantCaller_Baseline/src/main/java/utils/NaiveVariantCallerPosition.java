@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 21.12.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCallerPosition implements Writable {
     private int base_A;

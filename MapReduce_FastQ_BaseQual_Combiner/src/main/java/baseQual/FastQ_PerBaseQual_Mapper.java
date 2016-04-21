@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 04.02.16.
+ * Created 21.04.2016
  */
 public class FastQ_PerBaseQual_Mapper extends org.apache.hadoop.mapreduce.Mapper<Object, SequencedFragment, IdentifierPositionKeyWritable, QualityCountHelperWritable> {
     private static final int OFFSET = 33;

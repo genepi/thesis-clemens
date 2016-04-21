@@ -5,13 +5,12 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.VCFInputFormat;
-import org.seqdoop.hadoop_bam.VariantContextWritable;
 import util.*;
 
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 25.03.16.
+ * Created 21.04.2016
  */
 public class VCF_Join_Job {
 
@@ -22,6 +21,7 @@ public class VCF_Join_Job {
         }
 
         Configuration conf = new Configuration();
+        conf.set("sample", args[0].substring(args[0].lastIndexOf('/')+1));
         conf.set("reference", args[1].substring(args[1].lastIndexOf('/')+1));
         Job job = Job.getInstance(conf, "MR_VCF_ReduceSideJoin");
 
@@ -36,7 +36,7 @@ public class VCF_Join_Job {
 
         job.setInputFormatClass(VCFInputFormat.class);
         job.setMapOutputKeyClass(ChromPosKey.class);
-        job.setMapOutputValueClass(VariantContextWritable.class);
+        job.setMapOutputValueClass(JoinedResultWritable.class);
 
         job.setOutputKeyClass(NullWritable.class);
         job.setOutputValueClass(JoinedResultWritable.class);

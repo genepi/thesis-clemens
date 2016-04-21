@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 23.10.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCallerKeyWritable implements WritableComparable<NaiveVariantCallerKeyWritable> {
     private String sampleIdentifier;

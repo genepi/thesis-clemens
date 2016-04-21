@@ -1,5 +1,6 @@
 package main.scala
 
+import htsjdk.samtools.SAMRecord
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.LongWritable
 import org.apache.spark.rdd.{NewHadoopRDD, RDD}
@@ -9,14 +10,14 @@ import org.seqdoop.hadoop_bam.{BAMInputFormat, FileVirtualSplit, SAMRecordWritab
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Job {
 
   def main(args: Array[String]): Unit = {
 
     if (args.length != 2) {
-      println("usage: spark-submit Spark_VariantCaller_Scala_Baseline-1.0-SNAPSHOT.jar <bam input file> <output dir>")
+      println("usage: spark-submit Spark_VariantCaller_Scala_Baseline-1.0.jar <bam input file> <output dir>")
       return;
     }
 
@@ -41,10 +42,7 @@ object NaiveVariantCaller_Job {
 
     //retrieve the filename
     val hadoopRdd = bamFileRDD.asInstanceOf[NewHadoopRDD[LongWritable,SAMRecordWritable]]
-    val myRdd: RDD[Pair[String,SAMRecordWritable]] = hadoopRdd.mapPartitionsWithInputSplit { (inputSplit, iterator) ⇒
-      val file = inputSplit.asInstanceOf[FileVirtualSplit]
-      iterator.map { record ⇒ (file.getPath.getName, record._2) }
-    }
+    val myRdd: RDD[Pair[String, SAMRecord]] = hadoopRdd.values.map(record => record.get()).keyBy(record => record.getHeader.getReadGroups.get(0).getSample)
 
     //mapping step
     val baseCount: RDD[Pair[NaiveVariantCallerKey,Char]] = myRdd.flatMap( a => NaiveVariantCaller_Mapper.flatMap(a._1, a._2) )

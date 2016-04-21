@@ -6,7 +6,7 @@ import org.apache.hadoop.io.WritableComparator;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 25.03.16.
+ * Created 21.04.2016
  *
  * compares the composite key
  */

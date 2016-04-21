@@ -3,7 +3,7 @@ package main.scala
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 04.12.15.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Reducer {
 

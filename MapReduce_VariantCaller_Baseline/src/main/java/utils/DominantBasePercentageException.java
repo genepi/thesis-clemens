@@ -3,7 +3,7 @@ package utils;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 22.10.15.
+ * Created 21.04.2016
  */
 public class DominantBasePercentageException extends Exception {
 

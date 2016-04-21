@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 29.01.16.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Mapper {
   private val BASE_A: Char = 'A'

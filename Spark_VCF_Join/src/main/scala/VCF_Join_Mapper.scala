@@ -1,14 +1,18 @@
 package main.scala
 
+import java.util.Collections
+
 import htsjdk.tribble.util.ParsingUtils
-import htsjdk.variant.variantcontext.{Genotype, GenotypesContext, VariantContext}
+import htsjdk.variant.variantcontext.{Allele, Genotype, GenotypesContext, VariantContext}
 import utils.JoinedResult
+
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 13.02.16.
+  * Created 21.04.2016
   */
 object VCF_Join_Mapper {
 
@@ -18,18 +22,22 @@ object VCF_Join_Mapper {
 
   def constructResult(key: Pair[Int, Int], value: Pair[VariantContext, Option[VariantContext]]): JoinedResult = {
     val leftTuple: VariantContext = value._1
-    val alleles = ParsingUtils.sortList(leftTuple.getAlleles)
+    val alleles: java.util.List[Allele] = ParsingUtils.sortList(leftTuple.getAlleles)
+    val ref: String = alleles.get(0).getBaseString
+    val alt: String = alleles.get(1).getBaseString
+    val format: String = "GT"
 
     return new JoinedResult(
       leftTuple.getContig.toInt,
       leftTuple.getStart,
       if (leftTuple.hasID) leftTuple.getID else ".",
-      alleles.get(0).toString.charAt(0),
-      alleles.get(1).toString.charAt(0),
+      ref,
+      alt,
       if (leftTuple.hasLog10PError()) leftTuple.getPhredScaledQual().toString else ".",
       this.filtersToString(leftTuple.getCommonInfo.getFilters),
-      this.attributesToString(leftTuple.getAttributes),
-      this.genotypesToString(leftTuple.getGenotypes),
+      this.attributesToSortedString(leftTuple.getAttributes),
+      format,
+      this.genotypesToString(leftTuple.getGenotypes, ref, leftTuple.getAlternateAlleles),
       this.getReferenceAttributes(value._2)
     )
   }
@@ -47,36 +55,68 @@ object VCF_Join_Mapper {
     return sb.toString
   }
 
-  private def attributesToString(att: java.util.Map[String, AnyRef]): String = {
-    val delimiter: Char = ';'
-    val equals: Char = '='
+  private def genotypesToString(genotypes: GenotypesContext, ref: String, altAlleles: java.util.List[Allele]): String = {
     val sb: StringBuilder = new StringBuilder
-    for (entry <- att.entrySet) {
-      sb.append(entry.getKey)
-      sb.append(equals)
-      sb.append(entry.getValue)
+    val delimiter: Char = '\t'
+    for (genotype <- genotypes) {
+      if (genotype.getPloidy == 0) {
+        sb.append("NA")
+      }
+      val separator: String = if (genotype.isPhased) "|" else "/"
+      val al: ListBuffer[String] = new ListBuffer[String]()
+      var base: String = null
+      for (a <- genotype.getAlleles) {
+        base = a.getBaseString
+        if (base == ref) { //matches reference
+          al.add(0.toString)
+        }
+        else {
+          for (i <- 0 until altAlleles.size) {
+            if (base == altAlleles.get(i).getBaseString) {
+              al.add((i+1).toString)
+            }
+          }
+        }
+      }
+      sb.append(ParsingUtils.join(separator, al))
       sb.append(delimiter)
     }
     return sb.toString
-  }
-
-  private def genotypesToString(genotypes: GenotypesContext): String = {
-    val sb: StringBuilder = new StringBuilder
-    val delimiter: Char = ' ';
-    for (genotype: Genotype <- genotypes) {
-      sb.append(genotype.getGenotypeString)
-      sb.append(delimiter);
-    }
-    return sb.toString()
   }
 
   private def getReferenceAttributes(referenceTupleOption: Option[VariantContext]): String = {
     var rightAttr = " ";
     if (referenceTupleOption != None) {
       val rightTuple = referenceTupleOption.get
-      rightAttr =  this.attributesToString(rightTuple.getAttributes())
+      rightAttr = this.attributesToSortedString(rightTuple.getAttributes())
     }
     rightAttr
+  }
+
+  private def attributesToSortedString(att: java.util.Map[String, AnyRef]): String = {
+    val t: java.util.List[String] = new java.util.ArrayList[String](att.keySet)
+    Collections.sort(t)
+    val pairs: java.util.List[String] = new java.util.ArrayList[String]
+    for (k <- t) {
+      pairs.add(k + "=" + att.get(k));
+    }
+    val strings: Array[String] = pairs.toArray(new Array[String](pairs.size))
+    this.join(";", strings, 0, strings.length)
+  }
+
+  private def join(separator: String, strings: Array[String], start: Int, end: Int): String = {
+    if ((end - start) == 0) {
+      return ""
+    }
+    val ret : StringBuilder = new StringBuilder
+    ret.append(strings(start))
+    var i: Int = start + 1
+    while (i < end) {
+      ret.append(separator)
+      ret.append(strings(i))
+      i += 1
+    }
+    ret.toString()
   }
 
 }

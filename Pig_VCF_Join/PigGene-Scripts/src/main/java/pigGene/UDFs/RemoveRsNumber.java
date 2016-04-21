@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF to filter all lines containing an rs-Number.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class RemoveRsNumber extends FilterFunc {
 	private static String rsNumber = "rs";

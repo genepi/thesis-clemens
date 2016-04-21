@@ -1,13 +1,11 @@
 package utils
 
-import htsjdk.variant.variantcontext.GenotypesContext
-
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 19.02.16.
+  * Created 21.04.2016
   */
-class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual: String, filter: String, info: String, genotypes: String, infoRef: String) {
+class JoinedResult(chrom: Int, pos: Int, id: String, ref: String, alt: String, qual: String, filter: String, info: String, format: String, genotypes: String, infoRef: String) {
   private val delimiter = "\t"
 
   override def toString: String = {
@@ -27,14 +25,14 @@ class JoinedResult(chrom: Int, pos: Int, id: String, ref: Char, alt: Char, qual:
       .append(filter)
       .append(delimiter)
       .append(info)
-    if (infoRef.equals(" ")) {
-      sb.append(delimiter)
-    } else {
+    if (infoRef != " ") {
       sb.append(';')
+        .append(infoRef)
     }
-    sb.append(infoRef)
+    sb.append(delimiter)
+      .append(format)
       .append(delimiter)
-      .append(genotypes)
+      .append(genotypes.trim())
       .toString()
   }
 

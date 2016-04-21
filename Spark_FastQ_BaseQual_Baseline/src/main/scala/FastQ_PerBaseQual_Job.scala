@@ -11,7 +11,7 @@ import org.seqdoop.hadoop_bam.{FastqInputFormat, SequencedFragment}
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 04.02.16.
+  * Created 21.04.2016
   */
 object FastQ_PerBaseQual_Job {
 

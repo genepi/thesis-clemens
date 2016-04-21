@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 25.03.16.
+ * Created 21.04.2016
  */
 public class ChromPosKey implements WritableComparable<ChromPosKey> {
 

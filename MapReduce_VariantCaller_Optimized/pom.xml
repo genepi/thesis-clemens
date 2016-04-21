@@ -6,7 +6,7 @@
 
     <groupId>at.ac.uibk.mapreduce-variantcaller-optimized.thesis.banas</groupId>
     <artifactId>Mapreduce_VariantCaller_Optimized</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>

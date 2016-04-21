@@ -10,7 +10,6 @@ import org.apache.pig.data.Tuple;
  * lexicographically first.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class CompareFilenames extends FilterFunc {
 

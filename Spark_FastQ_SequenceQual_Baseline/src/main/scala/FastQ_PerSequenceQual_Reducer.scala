@@ -3,7 +3,7 @@ package main.scala
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 04.02.16.
+  * Created 21.04.2016
   */
 object FastQ_PerSequenceQual_Reducer {
 

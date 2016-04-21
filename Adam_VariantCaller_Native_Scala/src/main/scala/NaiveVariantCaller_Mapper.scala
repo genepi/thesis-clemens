@@ -1,17 +1,15 @@
 package main.scala
 
 import org.bdgenomics.adam.converters.SAMRecordConverter
-import org.bdgenomics.adam.models.{RecordGroupDictionary, SequenceDictionary}
 import org.bdgenomics.adam.rich.RichAlignmentRecord
 import org.bdgenomics.formats.avro.AlignmentRecord
-import org.seqdoop.hadoop_bam.SAMRecordWritable
 
 import scala.collection.mutable.ListBuffer
 
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 05.02.16.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Mapper {
   private val BASE_A: Char = 'A'
@@ -21,10 +19,6 @@ object NaiveVariantCaller_Mapper {
   private val BASE_UNKNOWN: Char = 'U'
   private val MIN_CLARITY_PERCENTAGE: Int = 75
   private val samRecordConverter = new SAMRecordConverter
-
-  def mapSampleIdentifierWithConvertedInputObject(record: Pair[String, SAMRecordWritable], seqDict: SequenceDictionary, readGroups: RecordGroupDictionary) : Pair[String, AlignmentRecord] = {
-    new Pair(record._1, samRecordConverter.convert(record._2.get(), seqDict, readGroups))
-  }
 
   def convertAlignmentRecordToRichAlignmentRecord(sampleIdentifier: String, record: AlignmentRecord): Pair[String, RichAlignmentRecord] = {
     new Pair(sampleIdentifier, RichAlignmentRecord.apply(record))

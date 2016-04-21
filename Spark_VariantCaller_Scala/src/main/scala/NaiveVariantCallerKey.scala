@@ -5,7 +5,7 @@ import scala.math.Ordered.orderingToOrdered
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 21.04.2016
   */
 class NaiveVariantCallerKey(val sampleIdentifier: String, val position: Int) extends NaiveVariantCallerSerializableTrait with Ordered[NaiveVariantCallerKey] {
 

@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF is used to perform a genotype mapping (numbers to characters).
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class GenotypeMapping extends EvalFunc<String> {
 	private final String oneOne = "1/1";

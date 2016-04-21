@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 02.10.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mapper<LongWritable, SAMRecordWritable, NaiveVariantCallerKeyWritable, NaiveVariantCallerPosition> {
     private static final int MIN_BASE_QUAL = 30;
@@ -34,9 +34,9 @@ public class NaiveVariantCaller_Mapper extends org.apache.hadoop.mapreduce.Mappe
 
     @Override
     protected void map(LongWritable key, SAMRecordWritable value, Context context) throws IOException, InterruptedException {
-        final String sampleIdentifier = ((FileVirtualSplit)context.getInputSplit()).getPath().getName();
-
         SAMRecord samRecord = value.get();
+        final String sampleIdentifier = samRecord.getHeader().getReadGroups().get(0).getSample();
+
         final byte[] readBases = samRecord.getReadBases();
         String sequence = new String(readBases, StandardCharsets.UTF_8);
 

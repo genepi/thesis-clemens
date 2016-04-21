@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 26.11.15.
+  * Created 21.04.2016
   */
 object NaiveVariantCaller_Mapper {
   private val BASE_A: Char = 'A'
@@ -18,8 +18,7 @@ object NaiveVariantCaller_Mapper {
   private val BASE_G: Char = 'G'
   private val BASE_T: Char = 'T'
 
-  def flatMap(sampleIdentifier:String, record:SAMRecordWritable): TraversableOnce[Pair[NaiveVariantCallerKey,Char]] = {
-    val samRecord: SAMRecord = record.get()
+  def flatMap(sampleIdentifier:String, samRecord:SAMRecord): TraversableOnce[Pair[NaiveVariantCallerKey,Char]] = {
     val readBases: Array[Byte] = samRecord.getReadBases()
     val sequence: String = new String(readBases, StandardCharsets.UTF_8)
     val resList = new ListBuffer[Pair[NaiveVariantCallerKey,Char]]()

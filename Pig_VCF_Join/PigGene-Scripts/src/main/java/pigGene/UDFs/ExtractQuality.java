@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF to extract the quality.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class ExtractQuality extends EvalFunc<String> {
 

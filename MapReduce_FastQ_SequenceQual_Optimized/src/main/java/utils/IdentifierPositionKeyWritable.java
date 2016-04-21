@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 05.02.16.
+ * Created 21.04.2016
  */
 public class IdentifierPositionKeyWritable implements WritableComparable<IdentifierPositionKeyWritable> {
     private String sampleIdentifier;

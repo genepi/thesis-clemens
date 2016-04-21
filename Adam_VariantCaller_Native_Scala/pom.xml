@@ -6,7 +6,7 @@
 
     <groupId>at.ac.uibk.adam-variantcaller-native-scala.thesis.banas</groupId>
     <artifactId>Adam_VariantCaller_Native_Scala</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -15,7 +15,6 @@
         <hadoop-bam.version>7.3.1</hadoop-bam.version>
         <parquet.version>1.8.1</parquet.version>
         <adam.version>0.19.0</adam.version>
-        <utils.version>0.2.3</utils.version>
         <htsjdk.version>1.139</htsjdk.version>
         <guava.version>16.0.1</guava.version>
         <netflix-server.version>0.12.2</netflix-server.version>
@@ -79,12 +78,6 @@
             <groupId>org.bdgenomics.adam</groupId>
             <artifactId>adam-core_2.10</artifactId>
             <version>${adam.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bdgenomics.utils</groupId>
-            <artifactId>utils-misc_2.10</artifactId>
-            <version>${utils.version}</version>
         </dependency>
 
         <dependency>

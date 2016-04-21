@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 04.02.16.
+ * Created 21.04.2016
  */
 public class QualityCountHelperWritable implements Writable {
     private int sumOfQualityValues = 0;

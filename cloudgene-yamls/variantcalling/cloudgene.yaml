@@ -47,7 +47,7 @@ mapred:
   - name: VariantCaller using Adam
     spark: Adam_VariantCaller_Native_Scala-1.0-SNAPSHOT.jar
     mainClass: main.scala.NaiveVariantCaller_Job
-    params: $input $outadam
+    params: $input $tmpadam $outadam
 
   inputs:
 
@@ -107,6 +107,14 @@ mapred:
       removeHeader: false
 
     - id: outadam
+      description: Output ADAM
+      type: hdfs-folder
+      download: true
+      mergeOutput: true
+      temp: false
+      removeHeader: false
+
+    - id: tmpadam
       description: Output ADAM
       type: hdfs-folder
       download: true

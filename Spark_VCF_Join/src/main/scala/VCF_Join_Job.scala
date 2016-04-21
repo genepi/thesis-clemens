@@ -10,13 +10,13 @@ import org.seqdoop.hadoop_bam.{VCFInputFormat, VariantContextWritable}
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 13.02.16.
+  * Created 21.04.2016
   */
 object VCF_Join_Job {
 
   def main(args: Array[String]): Unit = {
     if (args.length != 3) {
-      println("usage: spark-submit Spark_VCF_Join-1.0-SNAPSHOT.jar <vcf small input file> <vcf reference input file> <output dir>")
+      println("usage: spark-submit Spark_VCF_Join-1.0.jar <vcf small input file> <vcf reference input file> <output dir>")
       return;
     }
 

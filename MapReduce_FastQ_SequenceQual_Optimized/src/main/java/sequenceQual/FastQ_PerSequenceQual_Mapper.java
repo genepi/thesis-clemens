@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 04.02.16.
+ * Created 21.04.2016
  */
 public class FastQ_PerSequenceQual_Mapper extends org.apache.hadoop.mapreduce.Mapper<Object, SequencedFragment, IdentifierPositionKeyWritable, IntWritable> {
     private static final int OFFSET = 33;

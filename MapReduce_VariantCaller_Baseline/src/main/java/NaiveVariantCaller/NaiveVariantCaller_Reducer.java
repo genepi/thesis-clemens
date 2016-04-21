@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 02.10.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCaller_Reducer extends org.apache.hadoop.mapreduce.Reducer<NaiveVariantCallerKeyWritable, Text, NaiveVariantCallerKeyWritable, NaiveVariantCallerValueWritable> {
     private static final int MIN_CLARITY_PERCENTAGE = 75;

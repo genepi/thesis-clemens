@@ -6,7 +6,7 @@
 
     <groupId>at.ac.uibk.mapreduce-vcf-join.thesis.banas</groupId>
     <artifactId>Mapreduce_VCF_Join</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <genepi-yarn.version>yarn-1.0.0</genepi-yarn.version>

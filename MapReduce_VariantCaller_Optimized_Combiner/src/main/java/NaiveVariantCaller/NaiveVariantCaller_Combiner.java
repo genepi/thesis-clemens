@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 22.01.16.
+ * Created 21.04.2016
  */
 public class NaiveVariantCaller_Combiner extends org.apache.hadoop.mapreduce.Reducer<NaiveVariantCallerKeyWritable, NaiveVariantCallerPositionWritable, NaiveVariantCallerKeyWritable, NaiveVariantCallerPositionWritable> {
 

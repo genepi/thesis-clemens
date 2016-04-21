@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 14.08.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCallerContentWritable implements Writable {
     private static final char BASE_A = 'A';

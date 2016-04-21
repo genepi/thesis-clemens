@@ -17,7 +17,6 @@ import org.apache.pig.data.Tuple;
  * directory.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class PigStorageWithFilename extends PigStorage {
 	private String filename = null;

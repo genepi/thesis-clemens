@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 04.02.16.
+ * Created 21.04.2016
  */
 public class FastQ_PerSequenceQual_OutputFormat<K,V> extends TextOutputFormat {
     private static final String KEY_VALUE_SEPARATOR = ",";

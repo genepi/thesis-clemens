@@ -10,7 +10,6 @@ import org.apache.pig.data.Tuple;
  * execution.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class IgnoreHeader extends FilterFunc {
 

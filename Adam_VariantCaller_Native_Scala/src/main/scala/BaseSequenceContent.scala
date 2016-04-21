@@ -3,7 +3,7 @@ package main.scala
 /**
   * master-thesis Clemens Banas
   * Organization: DBIS - University of Innsbruck
-  * Created 29.01.16.
+  * Created 21.04.2016
   */
 class BaseSequenceContent(base: Char) {
   private val BASE_A: Char = 'A'

@@ -9,7 +9,6 @@ import org.apache.pig.data.Tuple;
  * UDF to filter lines that are not in a given range.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class FilterLineRange extends FilterFunc {
 	private static int countLines = 0;

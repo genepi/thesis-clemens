@@ -10,7 +10,6 @@ import org.apache.pig.data.Tuple;
  * UDF to filter unwanted chromosome information.
  * 
  * @author: Clemens Banas
- * @date: April 2013
  */
 public class FilterChromosome extends FilterFunc {
 	private static ArrayList<String> unwantedChromosomes = new ArrayList<String>(3);

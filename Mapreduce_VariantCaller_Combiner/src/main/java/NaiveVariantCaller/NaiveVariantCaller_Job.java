@@ -14,7 +14,7 @@ import utils.NaiveVariantCallerBaseRecordWritable;
 /**
  * master-thesis Clemens Banas
  * Organization: DBIS - University of Innsbruck
- * Created 02.10.15.
+ * Created 21.04.2016
  */
 public class NaiveVariantCaller_Job {
 
