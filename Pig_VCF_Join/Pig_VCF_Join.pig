@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pig script to test simple
  * joins between two relations.
  *

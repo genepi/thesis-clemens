@@ -19,33 +19,33 @@ mapred:
   steps:
 
   - name: VariantCaller using MapReduce (Baseline)
-    jar: Mapreduce_VariantCaller_Baseline-1.0-SNAPSHOT.jar
+    jar: Mapreduce_VariantCaller_Baseline-1.0.jar
     params: $input $outmapred_baseline
 
   - name: VariantCaller using MapReduce (Combiner)
-    jar: Mapreduce_VariantCaller_Combiner-1.0-SNAPSHOT.jar
+    jar: Mapreduce_VariantCaller_Combiner-1.0.jar
     params: $input $outmapred_combiner
 
   - name: VariantCaller using MapReduce (Optimized)
-    jar: Mapreduce_VariantCaller_Optimized-1.0-SNAPSHOT.jar
+    jar: Mapreduce_VariantCaller_Optimized-1.0.jar
     params: $input $outmapred_optimized
 
   - name: VariantCaller using MapReduce (Optimized Combiner)
-    jar: Mapreduce_VariantCaller_Optimized_Combiner-1.0-SNAPSHOT.jar
+    jar: Mapreduce_VariantCaller_Optimized_Combiner-1.0.jar
     params: $input $outmapred_optimized_combiner
 
   - name: VariantCaller using Spark (Baseline)
-    spark: Spark_VariantCaller_Scala_Baseline-1.0-SNAPSHOT.jar
+    spark: Spark_VariantCaller_Scala_Baseline-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
     params: $input $outspark_baseline
 
   - name: VariantCaller using Spark (Optimized)
-    spark: Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar
+    spark: Spark_VariantCaller_Scala-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
     params: $input $outspark
 
   - name: VariantCaller using Adam
-    spark: Adam_VariantCaller_Native_Scala-1.0-SNAPSHOT.jar
+    spark: Adam_VariantCaller_Native_Scala-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
     params: $input $tmpadam $outadam
 
@@ -117,7 +117,7 @@ mapred:
     - id: tmpadam
       description: Output ADAM
       type: hdfs-folder
-      download: true
+      download: false
       mergeOutput: true
       temp: false
       removeHeader: false

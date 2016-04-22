@@ -19,7 +19,7 @@ mapred:
   steps:
 
   - name: VCF Join using MapReduce
-    jar: Mapreduce_VCF_Join-1.0-SNAPSHOT.jar
+    jar: Mapreduce_VCF_Join-1.0.jar
     params: $input_sample $input_reference $outmapred
 
 #  - name: VCF Join using PIG
@@ -27,14 +27,9 @@ mapred:
 #    params: $input_sample $input_reference $outpig
 
   - name: VCF Join using Spark
-    spark: Spark_VCF_Join-1.0-SNAPSHOT.jar
+    spark: Spark_VCF_Join-1.0.jar
     mainClass: main.scala.VCF_Join_Job
     params: $input_sample $input_reference $outspark
-
-  - name: VCF Join using ADAM
-    spark: ...
-    mainClass: ...
-    params: $input_sample $input_reference $outadam
 
 
   inputs:
@@ -42,12 +37,12 @@ mapred:
      - id: input_sample
        description: Input
        type: text
-       value: eval-clemens/????
+       value: eval-clemens/vcf-big-nogz/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
 
     - id: input_reference
       description: Input
       type: text
-      value: eval-clemens/????
+      value: eval-clemens/vcf-big-nogz/HRC.r1.GRCh37.autosomes.mac5.sites.vcf
 
 
   outputs:
@@ -69,14 +64,6 @@ mapred:
       removeHeader: false
 
     - id: outspark
-      description: Output MapReduce
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: false
-      removeHeader: false
-
-    - id: outadam
       description: Output MapReduce
       type: hdfs-folder
       download: true

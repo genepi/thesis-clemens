@@ -23,8 +23,9 @@ object VCF_Join_Mapper {
   def constructResult(key: Pair[Int, Int], value: Pair[VariantContext, Option[VariantContext]]): JoinedResult = {
     val leftTuple: VariantContext = value._1
     val alleles: java.util.List[Allele] = ParsingUtils.sortList(leftTuple.getAlleles)
+    val alternateAlleles: java.util.List[Allele] = leftTuple.getAlternateAlleles
     val ref: String = alleles.get(0).getBaseString
-    val alt: String = alleles.get(1).getBaseString
+    val alt: String = combineAlleles(alternateAlleles)
     val format: String = "GT"
 
     return new JoinedResult(
@@ -37,9 +38,19 @@ object VCF_Join_Mapper {
       this.filtersToString(leftTuple.getCommonInfo.getFilters),
       this.attributesToSortedString(leftTuple.getAttributes),
       format,
-      this.genotypesToString(leftTuple.getGenotypes, ref, leftTuple.getAlternateAlleles),
+      this.genotypesToString(leftTuple.getGenotypes, ref, alternateAlleles),
       this.getReferenceAttributes(value._2)
     )
+  }
+
+  private def combineAlleles(alleles: java.util.List[Allele]): String = {
+    val sb: StringBuilder = new StringBuilder
+    sb.append(alleles.get(0).getBaseString)
+    for (i <- 1 until alleles.size) {
+      sb.append(",")
+      sb.append(alleles.get(i).getBaseString)
+    }
+    return sb.toString
   }
 
   private def filtersToString(filters: java.util.Set[String]): String = {
