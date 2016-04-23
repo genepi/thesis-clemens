@@ -19,7 +19,7 @@ mapred:
   steps:
 
   - name: FastQ PerBaseQual Baseline using Spark
-    spark: Spark_FastQ_BaseQual_Baseline-1.0-SNAPSHOT.jar
+    spark: Spark_FastQ_BaseQual_Baseline-1.0.jar
     mainClass: main.scala.FastQ_PerBaseQual_Job
     params: $input $outspark_perBaseQual_baseline
 
@@ -28,7 +28,7 @@ mapred:
      - id: input
        description: Input
        type: text
-       value: eval-clemens/fastq-small
+       value: eval-clemens/1000g-fastq
 
   outputs:
 

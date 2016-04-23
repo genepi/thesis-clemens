@@ -1,6 +1,5 @@
 package util;
 
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Partitioner;
 
 /**
@@ -10,10 +9,10 @@ import org.apache.hadoop.mapreduce.Partitioner;
  *
  * partitions key based on "part" of natural key (chrom)
  */
-public class KeyPartitioner extends Partitioner<ChromPosKey, DoubleWritable> {
+public class KeyPartitioner extends Partitioner<ChromPosKey, JoinedResultWritable> {
 
     @Override
-    public int getPartition(ChromPosKey chromPosKey, DoubleWritable val, int numPartitions) {
+    public int getPartition(ChromPosKey chromPosKey, JoinedResultWritable val, int numPartitions) {
         int hash = chromPosKey.getChromosome();
         return hash % numPartitions;
     }

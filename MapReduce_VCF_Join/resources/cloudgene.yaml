@@ -1,4 +1,4 @@
-name: Clemens Thesis - VCF JOIN Spark
+name: Clemens Thesis - VCF JOIN MR
 description:
 version: beta
 website: http://genepi.i-med.ac.at
@@ -18,10 +18,9 @@ mapred:
 
   steps:
 
-  - name: VCF Join using Spark
-    spark: Spark_VCF_Join-1.0.jar
-    mainClass: main.scala.VCF_Join_Job
-    params: $input_sample $input_reference $outspark
+  - name: VCF Join using MapReduce
+    jar: Mapreduce_VCF_Join-1.0.jar
+    params: $input_sample $input_reference $outmapred
 
   inputs:
 
@@ -37,7 +36,7 @@ mapred:
 
   outputs:
 
-    - id: outpig
+    - id: outmapred
       description: Output MapReduce
       type: hdfs-folder
       download: false

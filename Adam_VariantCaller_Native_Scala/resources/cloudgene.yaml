@@ -1,4 +1,4 @@
-name: Clemens Thesis - VariantCalling ADAM Native
+name: Clemens Thesis - VariantCalling ADAM
 description:
 version: beta
 website: http://genepi.i-med.ac.at
@@ -19,16 +19,16 @@ mapred:
   steps:
 
   - name: VariantCaller using Adam
-    spark: Adam_VariantCaller_Scala-1.0-SNAPSHOT.jar
+    spark: Adam_VariantCaller_Native_Scala-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
-    params: $input $outadam
+    params: $input $tmpadam $outadam
 
   inputs:
 
      - id: input
        description: Input
        type: text
-       value: eval-clemens/test-input
+       value: eval-clemens/1000g-complete
 
   outputs:
 
@@ -36,7 +36,14 @@ mapred:
       description: Output ADAM
       type: hdfs-folder
       download: true
+      mergeOutput: true
       temp: false
+      removeHeader: false
+
+    - id: tmpadam
+      description: Output ADAM
+      type: hdfs-folder
+      download: false
       mergeOutput: true
       temp: false
       removeHeader: false

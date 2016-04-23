@@ -19,7 +19,7 @@ mapred:
   steps:
 
   - name: FastQ PerSeqQual Combiner using MapReduce
-    jar: Mapreduce_FastQ_SequenceQual_Combiner-1.0-SNAPSHOT.jar
+    jar: Mapreduce_FastQ_SequenceQual_Combiner-1.0.jar
     params: $input $outmapred_perSeqQual_combiner
 
   inputs:
@@ -27,7 +27,7 @@ mapred:
      - id: input
        description: Input
        type: text
-       value: eval-clemens/fastq-small
+       value: eval-clemens/1000g-fastq
 
   outputs:
 

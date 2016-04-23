@@ -19,7 +19,7 @@ mapred:
   steps:
 
   - name: VariantCaller using Spark (Optimized)
-    spark: Spark_VariantCaller_Scala-1.0-SNAPSHOT.jar
+    spark: Spark_VariantCaller_Scala-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
     params: $input $outspark
 
@@ -28,7 +28,7 @@ mapred:
      - id: input
        description: Input
        type: text
-       value: eval-clemens/test-input
+       value: eval-clemens/1000g-complete
 
   outputs:
 

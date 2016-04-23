@@ -1,4 +1,4 @@
-name: Clemens Thesis VCF Join complete
+name: Clemens Thesis - VCF JOIN complete
 description:
 version: beta
 website: http://genepi.i-med.ac.at
@@ -31,26 +31,24 @@ mapred:
     mainClass: main.scala.VCF_Join_Job
     params: $input_sample $input_reference $outspark
 
-
   inputs:
 
-     - id: input_sample
-       description: Input
-       type: text
-       value: eval-clemens/vcf-big-nogz/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
+    - id: input_sample
+      description: Input
+      type: text
+      value: eval-clemens/vcf-big-nogz/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
 
     - id: input_reference
       description: Input
       type: text
       value: eval-clemens/vcf-big-nogz/HRC.r1.GRCh37.autosomes.mac5.sites.vcf
 
-
   outputs:
 
     - id: outmapred
       description: Output MapReduce
       type: hdfs-folder
-      download: true
+      download: false
       mergeOutput: true
       temp: false
       removeHeader: false
@@ -58,7 +56,7 @@ mapred:
     - id: outpig
       description: Output MapReduce
       type: hdfs-folder
-      download: true
+      download: false
       mergeOutput: true
       temp: false
       removeHeader: false
@@ -66,7 +64,7 @@ mapred:
     - id: outspark
       description: Output MapReduce
       type: hdfs-folder
-      download: true
+      download: false
       mergeOutput: true
       temp: false
       removeHeader: false
