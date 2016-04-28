@@ -3,7 +3,7 @@ package main.scala
 import java.util.Collections
 
 import htsjdk.tribble.util.ParsingUtils
-import htsjdk.variant.variantcontext.{Allele, Genotype, GenotypesContext, VariantContext}
+import htsjdk.variant.variantcontext.{Allele, GenotypesContext, VariantContext}
 import utils.JoinedResult
 
 import scala.collection.JavaConversions._
@@ -16,31 +16,50 @@ import scala.collection.mutable.ListBuffer
   */
 object VCF_Join_Mapper {
 
-  def mapKeyBy(vcfRecord: VariantContext): Pair[Int, Int] = {
-    (vcfRecord.getContig.toInt, vcfRecord.getStart)
-  }
+  def mapToDataObject(value: VariantContext): JoinedResult = {
+    val alleles: java.util.List[Allele] = ParsingUtils.sortList(value.getAlleles)
+    val alternateAlleles: java.util.List[Allele] = value.getAlternateAlleles
 
-  def constructResult(key: Pair[Int, Int], value: Pair[VariantContext, Option[VariantContext]]): JoinedResult = {
-    val leftTuple: VariantContext = value._1
-    val alleles: java.util.List[Allele] = ParsingUtils.sortList(leftTuple.getAlleles)
-    val alternateAlleles: java.util.List[Allele] = leftTuple.getAlternateAlleles
+    val chrom: Int = Integer.valueOf(value.getContig)
+    val pos: Int = value.getStart
+    val id: String = (if (value.hasID) value.getID else ".")
     val ref: String = alleles.get(0).getBaseString
     val alt: String = combineAlleles(alternateAlleles)
+    val qual: String = if (value.hasLog10PError) String.valueOf(value.getPhredScaledQual) else "."
+    val filter: String = this.filtersToString(value.getCommonInfo.getFilters)
+    val info: String = this.attributesToSortedString(value.getAttributes)
     val format: String = "GT"
+    var genotypes: String = ""
+    if (value.hasGenotypes) {
+      genotypes = this.genotypesToString(value.getGenotypes, ref, alternateAlleles)
+    }
+    return new JoinedResult(chrom, pos, id, ref, alt, qual, filter, info, format, genotypes)
+  }
 
-    return new JoinedResult(
-      leftTuple.getContig.toInt,
-      leftTuple.getStart,
-      if (leftTuple.hasID) leftTuple.getID else ".",
-      ref,
-      alt,
-      if (leftTuple.hasLog10PError()) leftTuple.getPhredScaledQual().toString else ".",
-      this.filtersToString(leftTuple.getCommonInfo.getFilters),
-      this.attributesToSortedString(leftTuple.getAttributes),
-      format,
-      this.genotypesToString(leftTuple.getGenotypes, ref, alternateAlleles),
-      this.getReferenceAttributes(value._2)
-    )
+  def mapKeyBy(joinedRes: JoinedResult): Pair[Int, Int] = {
+    (joinedRes.getChrom(), joinedRes.getPos())
+  }
+
+  def constructResult(key: Pair[Int, Int], value: Pair[JoinedResult, Option[JoinedResult]]): JoinedResult = {
+    val leftTuple: JoinedResult = value._1
+    val rightTuple = value._2
+
+    if (rightTuple != None) {
+      return new JoinedResult(
+        leftTuple.getChrom,
+        leftTuple.getPos,
+        leftTuple.getId,
+        leftTuple.getRef,
+        leftTuple.getAlt,
+        leftTuple.getQual,
+        leftTuple.getFilter,
+        leftTuple.getInfo + ";" + rightTuple.get.getInfo(),
+        leftTuple.getFormat,
+        leftTuple.getGenotypes
+      )
+    }
+
+    return leftTuple
   }
 
   private def combineAlleles(alleles: java.util.List[Allele]): String = {
@@ -93,15 +112,6 @@ object VCF_Join_Mapper {
       sb.append(delimiter)
     }
     return sb.toString
-  }
-
-  private def getReferenceAttributes(referenceTupleOption: Option[VariantContext]): String = {
-    var rightAttr = " ";
-    if (referenceTupleOption != None) {
-      val rightTuple = referenceTupleOption.get
-      rightAttr = this.attributesToSortedString(rightTuple.getAttributes())
-    }
-    rightAttr
   }
 
   private def attributesToSortedString(att: java.util.Map[String, AnyRef]): String = {

@@ -1,11 +1,11 @@
 package main.scala
 
-import htsjdk.variant.variantcontext.VariantContext
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.LongWritable
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.seqdoop.hadoop_bam.{VCFInputFormat, VariantContextWritable}
+import utils.JoinedResult
 
 /**
   * master-thesis Clemens Banas
@@ -26,6 +26,10 @@ object VCF_Join_Job {
 
     val conf = new SparkConf()
     conf.setAppName("Spark_VCF_Join")
+    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    conf.set("spark.kryoserializer.buffer.mb", "4")
+    conf.set("spark.kryo.referenceTracking", "true")
+    conf.registerKryoClasses(Array(classOf[JoinedResult]))
     val sc = new SparkContext(conf)
 
 
@@ -41,8 +45,8 @@ object VCF_Join_Job {
     ).values
 
     // define the join key on the small RDD
-    val vcfSmallFileRDDMapped: RDD[VariantContext] = vcfSmallFileRDD.map( record => record.get() )
-    val smallJoinRDDRelation: RDD[Pair[Pair[Int, Int], VariantContext]] = vcfSmallFileRDDMapped.keyBy( record => VCF_Join_Mapper.mapKeyBy(record) )
+    val vcfSmallFileRDDMapped: RDD[JoinedResult] = vcfSmallFileRDD.map(record => VCF_Join_Mapper.mapToDataObject(record.get()) )
+    val smallJoinRDDRelation: RDD[Pair[Pair[Int, Int], JoinedResult]] = vcfSmallFileRDDMapped.keyBy( record => VCF_Join_Mapper.mapKeyBy(record) )
 
     // load the large VCF dataset into an RDD
     val configurationVCFInputLarge = new Configuration()
@@ -56,11 +60,11 @@ object VCF_Join_Job {
     ).values
 
     // define the join key on the large RDD
-    val vcfLargeFileRDDMapped: RDD[VariantContext] = vcfLargeFileRDD.map( record => record.get() )
-    val largeJoinRDDRelation: RDD[Pair[Pair[Int, Int], VariantContext]] = vcfLargeFileRDDMapped.keyBy( record => VCF_Join_Mapper.mapKeyBy(record) )
+    val vcfLargeFileRDDMapped: RDD[JoinedResult] = vcfLargeFileRDD.map( record => VCF_Join_Mapper.mapToDataObject(record.get()) )
+    val largeJoinRDDRelation: RDD[Pair[Pair[Int, Int], JoinedResult]] = vcfLargeFileRDDMapped.keyBy( record => VCF_Join_Mapper.mapKeyBy(record) )
 
     // join the two RDDs according to their key (composed of chromosome & position)
-    val joinedRDD: RDD[Pair[Pair[Int, Int], Pair[VariantContext, Option[VariantContext]]]] = smallJoinRDDRelation.leftOuterJoin(largeJoinRDDRelation)
+    val joinedRDD: RDD[Pair[Pair[Int, Int], Pair[JoinedResult, Option[JoinedResult]]]] = smallJoinRDDRelation.leftOuterJoin(largeJoinRDDRelation)
 
     val res = joinedRDD.sortBy( record => record._1 ).map( record => VCF_Join_Mapper.constructResult(record._1, record._2) )
     res.saveAsTextFile(output)

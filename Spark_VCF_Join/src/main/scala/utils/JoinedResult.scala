@@ -5,8 +5,48 @@ package utils
   * Organization: DBIS - University of Innsbruck
   * Created 21.04.2016
   */
-class JoinedResult(chrom: Int, pos: Int, id: String, ref: String, alt: String, qual: String, filter: String, info: String, format: String, genotypes: String, infoRef: String) {
+class JoinedResult(chrom: Int, pos: Int, id: String, ref: String, alt: String, qual: String, filter: String, info: String, format: String, genotypes: String) {
   private val delimiter = "\t"
+
+  def getChrom(): Int = {
+    chrom
+  }
+
+  def getPos(): Int = {
+    pos
+  }
+
+  def getId(): String = {
+    id
+  }
+
+  def getRef(): String = {
+    ref
+  }
+
+  def getAlt(): String = {
+    alt
+  }
+
+  def getQual(): String = {
+    qual
+  }
+
+  def getFilter(): String = {
+    filter
+  }
+
+  def getInfo(): String = {
+    info
+  }
+
+  def getFormat(): String = {
+    format
+  }
+
+  def getGenotypes(): String = {
+    genotypes
+  }
 
   override def toString: String = {
     val sb: StringBuilder = new StringBuilder()
@@ -24,12 +64,8 @@ class JoinedResult(chrom: Int, pos: Int, id: String, ref: String, alt: String, q
       .append(delimiter)
       .append(filter)
       .append(delimiter)
-      .append(info)
-    if (infoRef != " ") {
-      sb.append(';')
-        .append(infoRef)
-    }
-    sb.append(delimiter)
+      .append(info.trim)
+      .append(delimiter)
       .append(format)
       .append(delimiter)
       .append(genotypes.trim())
