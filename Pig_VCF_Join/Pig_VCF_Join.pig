@@ -3,7 +3,7 @@
  * joins between two relations.
  *
  * call this script like this:
- * ﻿pig -x local -param sample=input.vcf -param reference=reference.vcf -param output=res Pig_VCF_Join.pig
+ * ﻿pig -param sample=eval-clemens/vcf-big-nogz/ALL.chr2.phase3shapeit2mvncallintegratedv5a.20130502.genotypes.vcf -param reference=eval-clemens/vcf-big-nogz/HRC.r1.GRCh37.autosomes.mac5.sites.vcf -param output=res Pig_VCF_Join.pig
  *
  * @author: Clemens Banas
  * @date: March 2016
