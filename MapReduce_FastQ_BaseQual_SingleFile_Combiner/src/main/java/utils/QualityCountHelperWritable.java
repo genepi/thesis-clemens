@@ -35,14 +35,6 @@ public class QualityCountHelperWritable implements Writable {
         return numberOfQualityValues;
     }
 
-    public void addQualityValueToSum(int value) {
-        this.sumOfQualityValues += value;
-    }
-
-    public void incrementNumberOfQualityValues() {
-        this.numberOfQualityValues++;
-    }
-
     public void write(DataOutput out) throws IOException {
         out.writeInt(sumOfQualityValues);
         out.writeInt(numberOfQualityValues);

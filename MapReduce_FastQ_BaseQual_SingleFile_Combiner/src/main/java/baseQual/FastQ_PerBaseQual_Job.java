@@ -8,7 +8,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.seqdoop.hadoop_bam.FastqInputFormat;
-import utils.IdentifierPositionKeyWritable;
 import utils.QualityCountHelperWritable;
 
 /**
@@ -20,17 +19,18 @@ public class FastQ_PerBaseQual_Job {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "MR_FastQ_PerBaseQual_SingleFile_Optimized");
+        Job job = Job.getInstance(conf, "MR_FastQ_PerBaseQual_SingleFile_Combiner");
 
         job.setJarByClass(FastQ_PerBaseQual_Job.class);
         job.setMapperClass(FastQ_PerBaseQual_Mapper.class);
+        job.setCombinerClass(FastQ_PerBaseQual_Combiner.class);
         job.setReducerClass(FastQ_PerBaseQual_Reducer.class);
 
         job.setInputFormatClass(FastqInputFormat.class);
         job.setMapOutputKeyClass(IntWritable.class);
         job.setMapOutputValueClass(QualityCountHelperWritable.class);
 
-        job.setOutputKeyClass(IdentifierPositionKeyWritable.class);
+        job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(DoubleWritable.class);
 
         job.setOutputFormatClass(FastQ_PerBaseQual_OutputFormat.class);

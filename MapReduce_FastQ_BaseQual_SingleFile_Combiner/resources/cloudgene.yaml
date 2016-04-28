@@ -1,4 +1,4 @@
-name: Clemens Thesis FastQ BaseQual MR Optimized Single File
+name: Clemens Thesis FastQ BaseQual MR Combiner Single File
 description:
 version: beta
 website: http://genepi.i-med.ac.at
@@ -19,15 +19,15 @@ mapred:
   steps:
 
   - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_small $outmapred_perBaseQual_singlefile_small_baseline
 
   - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_medium $outmapred_perBaseQual_singlefile_medium_baseline
 
   - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_large $outmapred_perBaseQual_singlefile_large_baseline
 
   inputs:

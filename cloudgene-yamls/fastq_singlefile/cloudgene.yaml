@@ -18,8 +18,8 @@ mapred:
 
   steps:
 
-  - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+  - name: FastQ PerBaseQual Single File Combiner using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_small $outmapred_perBaseQual_singlefile_small_baseline
 
   - name: FastQ PerBaseQual Single File Baseline using Spark
@@ -32,8 +32,8 @@ mapred:
     mainClass: main.scala.FastQ_PerBaseQual_Job
     params: $input_small $tmpadam_perBaseQual_singlefile_small_baseline $outadam_perBaseQual_singlefile_small_baseline
 
-  - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+  - name: FastQ PerBaseQual Single File Combiner using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_medium $outmapred_perBaseQual_singlefile_medium_baseline
 
   - name: FastQ PerBaseQual Single File Baseline using Spark
@@ -46,8 +46,8 @@ mapred:
     mainClass: main.scala.FastQ_PerBaseQual_Job
     params: $input_medium $tmpadam_perBaseQual_singlefile_medium_baseline $outadam_perBaseQual_singlefile_medium_baseline
 
-  - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Optimized-1.0.jar
+  - name: FastQ PerBaseQual Single File Combiner using MapReduce
+    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
     params: $input_large $outmapred_perBaseQual_singlefile_large_baseline
 
   - name: FastQ PerBaseQual Single File Baseline using Spark
@@ -79,7 +79,7 @@ mapred:
 
   outputs:
 
-    - id: outmapred_perBaseQual_singlefile_small_baseline
+    - id: outmapred_perBaseQual_singlefile_small_combiner
       description: Output MR BaseQual Single File Small
       type: hdfs-folder
       download: true
@@ -111,7 +111,7 @@ mapred:
       temp: false
       removeHeader: false
 
-    - id: outmapred_perBaseQual_singlefile_medium_baseline
+    - id: outmapred_perBaseQual_singlefile_medium_combiner
       description: Output MR BaseQual Single File Medium
       type: hdfs-folder
       download: true
@@ -143,7 +143,7 @@ mapred:
       temp: false
       removeHeader: false
 
-    - id: outmapred_perBaseQual_singlefile_large_baseline
+    - id: outmapred_perBaseQual_singlefile_large_combiner
       description: Output MR BaseQual Single File Large
       type: hdfs-folder
       download: true
