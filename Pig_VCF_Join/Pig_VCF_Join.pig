@@ -9,8 +9,6 @@
  * @date: March 2016
  */
 
-REGISTER PigGene-1.0.jar;
-
 --sample loading and pre-processing
 sampleRel = LOAD '$sample' USING PigStorage('\t') AS
 		(chrom:chararray, pos:long, id:chararray, ref:chararray, alt:chararray, qual:double, filt:chararray, info:chararray, format:chararray,
@@ -41,17 +39,17 @@ sampleRel = LOAD '$sample' USING PigStorage('\t') AS
             gen2400:chararray, gen2401:chararray, gen2402:chararray, gen2403:chararray, gen2404:chararray, gen2405:chararray, gen2406:chararray, gen2407:chararray, gen2408:chararray, gen2409:chararray, gen2410:chararray, gen2411:chararray, gen2412:chararray, gen2413:chararray, gen2414:chararray, gen2415:chararray, gen2416:chararray, gen2417:chararray, gen2418:chararray, gen2419:chararray, gen2420:chararray, gen2421:chararray, gen2422:chararray, gen2423:chararray, gen2424:chararray, gen2425:chararray, gen2426:chararray, gen2427:chararray, gen2428:chararray, gen2429:chararray, gen2430:chararray, gen2431:chararray, gen2432:chararray, gen2433:chararray, gen2434:chararray, gen2435:chararray, gen2436:chararray, gen2437:chararray, gen2438:chararray, gen2439:chararray, gen2440:chararray, gen2441:chararray, gen2442:chararray, gen2443:chararray, gen2444:chararray, gen2445:chararray, gen2446:chararray, gen2447:chararray, gen2448:chararray, gen2449:chararray, gen2450:chararray, gen2451:chararray, gen2452:chararray, gen2453:chararray, gen2454:chararray, gen2455:chararray, gen2456:chararray, gen2457:chararray, gen2458:chararray, gen2459:chararray, gen2460:chararray, gen2461:chararray, gen2462:chararray, gen2463:chararray, gen2464:chararray, gen2465:chararray, gen2466:chararray, gen2467:chararray, gen2468:chararray, gen2469:chararray, gen2470:chararray, gen2471:chararray, gen2472:chararray, gen2473:chararray, gen2474:chararray, gen2475:chararray, gen2476:chararray, gen2477:chararray, gen2478:chararray, gen2479:chararray, gen2480:chararray, gen2481:chararray, gen2482:chararray, gen2483:chararray, gen2484:chararray, gen2485:chararray, gen2486:chararray, gen2487:chararray, gen2488:chararray, gen2489:chararray, gen2490:chararray, gen2491:chararray, gen2492:chararray, gen2493:chararray, gen2494:chararray, gen2495:chararray, gen2496:chararray, gen2497:chararray, gen2498:chararray, gen2499:chararray,
             gen2500:chararray, gen2501:chararray, gen2502:chararray, gen2503:chararray
 		);
-sampleRelF = FILTER sampleRel BY pigGene.UDFs.IgnoreHeader(chrom);
+sampleRelF = FILTER sampleRel BY NOT (chrom matches '^#.*');
 
 --reference loading and pre-processing
 refRelIn = LOAD '$reference' USING PigStorage('\t') AS
             (REFchrom:chararray, REFpos:long, REFid:chararray, REFref:chararray, REFalt:chararray,
                 REFqual:double, REFfilt:chararray, REFinfo:chararray);
 referenceRel = FOREACH refRelIn GENERATE REFchrom, REFpos, REFinfo;
-referenceRelF = FILTER referenceRel BY pigGene.UDFs.IgnoreHeader(REFchrom);
+referenceRelF = FILTER referenceRel BY NOT (REFchrom matches '^#.*');
 
 --join, result construction and output
 joinedRel = JOIN referenceRelF BY (REFchrom, REFpos) RIGHT OUTER, sampleRelF BY (chrom, pos);
 projectedRel = FOREACH joinedRel GENERATE chrom..filt, CONCAT(info,((referenceRelF::REFinfo IS NULL) ? ' ' : CONCAT(';',referenceRelF::REFinfo))), format..;
 
-STORE projectedRel INTO '$output';
+STORE projectedRel INTO '$output' USING PigStorage('\t');
