@@ -22,9 +22,9 @@ mapred:
     jar: Mapreduce_VCF_Join-1.0.jar
     params: $input_sample $input_reference $outmapred
 
-#  - name: VCF Join using PIG
-#    pig: ...
-#    params: $input_sample $input_reference $outpig
+  - name: VCF Join using PIG
+    pig: Pig_VCF_Join.pig
+    params: -param sample=$input_sample -param reference=$input_reference -param output=$outpig
 
   - name: VCF Join using Spark
     spark: Spark_VCF_Join-1.0.jar

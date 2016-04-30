@@ -49,7 +49,7 @@ referenceRel = FOREACH refRelIn GENERATE REFchrom, REFpos, REFinfo;
 referenceRelF = FILTER referenceRel BY NOT (REFchrom matches '^#.*');
 
 --join, result construction and output
-joinedRel = JOIN referenceRelF BY (REFchrom, REFpos) RIGHT OUTER, sampleRelF BY (chrom, pos);
-projectedRel = FOREACH joinedRel GENERATE chrom..filt, CONCAT(info,((referenceRelF::REFinfo IS NULL) ? ' ' : CONCAT(';',referenceRelF::REFinfo))), format..;
+joinedRel = JOIN sampleRelF BY (chrom, pos) LEFT OUTER, referenceRelF BY (REFchrom, REFpos);
+projectedRel = FOREACH joinedRel GENERATE chrom..filt, CONCAT(info,((referenceRelF::REFinfo IS NULL) ? ' ' : CONCAT(';',referenceRelF::REFinfo))), format..gen2503;
 
 STORE projectedRel INTO '$output' USING PigStorage('\t');
