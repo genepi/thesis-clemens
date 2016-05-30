@@ -20,15 +20,7 @@ mapred:
 
   - name: FastQ PerBaseQual Single File Baseline using MapReduce
     jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
-    params: $input_small $outmapred_perBaseQual_singlefile_small_baseline
-
-  - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
-    params: $input_medium $outmapred_perBaseQual_singlefile_medium_baseline
-
-  - name: FastQ PerBaseQual Single File Baseline using MapReduce
-    jar: Mapreduce_FastQ_BaseQual_SingleFile_Combiner-1.0.jar
-    params: $input_large $outmapred_perBaseQual_singlefile_large_baseline
+    params: $input_small $outmapred_perBaseQual_singlefile_baseline
 
   inputs:
 
@@ -37,36 +29,10 @@ mapred:
       type: text
       value: eval-clemens/singleFastQ/fastQ/small08.fastq
 
-    - id: input_medium
-      description: Input
-      type: text
-      value: eval-clemens/singleFastQ/fastQ/medium4.fastq
-
-    - id: input_large
-      description: Input
-      type: text
-      value: eval-clemens/singleFastQ/fastQ/big20.fastq
-
   outputs:
 
-    - id: outmapred_perBaseQual_singlefile_small_baseline
-      description: Output MR BaseQual Single File Small
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: false
-      removeHeader: false
-
-    - id: outmapred_perBaseQual_singlefile_medium_baseline
-      description: Output MR BaseQual Single File Medium
-      type: hdfs-folder
-      download: true
-      mergeOutput: true
-      temp: false
-      removeHeader: false
-
-    - id: outmapred_perBaseQual_singlefile_large_baseline
-      description: Output MR BaseQual Single File Large
+    - id: outmapred_perBaseQual_singlefile_baseline
+      description: Output MR BaseQual Single File
       type: hdfs-folder
       download: true
       mergeOutput: true

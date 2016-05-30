@@ -18,7 +18,7 @@ mapred:
 
   steps:
 
-  - name: VariantCaller using MapReduce (Baseline)
+  - name: VariantCaller using MapReduce Baseline
     jar: Mapreduce_VariantCaller_Baseline-1.0.jar
     params: $input $outmapred_baseline
 

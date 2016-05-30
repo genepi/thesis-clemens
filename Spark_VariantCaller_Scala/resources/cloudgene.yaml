@@ -18,7 +18,7 @@ mapred:
 
   steps:
 
-  - name: VariantCaller using Spark (Optimized)
+  - name: VariantCaller using Spark Optimized
     spark: Spark_VariantCaller_Scala-1.0.jar
     mainClass: main.scala.NaiveVariantCaller_Job
     params: $input $outspark

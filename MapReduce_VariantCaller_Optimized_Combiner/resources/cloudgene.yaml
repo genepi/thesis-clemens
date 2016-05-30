@@ -18,7 +18,7 @@ mapred:
 
   steps:
 
-  - name: VariantCaller using MapReduce (Optimized Combiner)
+  - name: VariantCaller using MapReduce Optimized Combiner
     jar: Mapreduce_VariantCaller_Optimized_Combiner-1.0.jar
     params: $input $outmapred_optimized_combiner
 
